@@ -232,7 +232,8 @@ EXPLAIN SELECT * FROM table
 
 id | select_type|table|partitions|type|possible_keys|key|key_len|ref|rows|filtered|extra|
 ---| ---------|-----|------------|----|-------------|---|-------|---|----|----|----|
-1 | simple
+1 | simple|
+
 这个表便是sql的执行计划，我们可以通过分析这个执行计划来知道我们sql的运行情况。现对各列进行解释：
 
 1）id：查询中执行select子句或操作表的顺序。
