@@ -1,4 +1,4 @@
-package com.muggle.learn.mybatisplugintest;
+package com.muggle.learn;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
