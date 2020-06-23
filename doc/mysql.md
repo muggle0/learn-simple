@@ -55,15 +55,51 @@ SELECT * FROM INFORMATION_SCHEMA.INNODB_LOCKS;
 
 系统变量（全局变量和会话变量）
 
+
 ```java
 show SESSION VARIABLES; 会话变量
 
 show global VARIABLES
+查看变量
+
+show global variavles like ''
+
+select @@global.xxx;
+
+set global.xxx=xxxx
+
+set @@global.autocommit=1;
+
+
+服务器每次启动系统变量都会被赋初始值
+
+隔离级别 session @@session.tx_isolation='read-committed'
+
+
 ```
 
 自定义变量 （用户变量和 局部变量）
 
+用户变量只作用于当前会话
 
+声明并初始化
+
+set @xxx=xxx
+set @xxx:=xxx
+select @xxx:=xxx
+
+赋值 同上
+或者 select count(*) into @count from table
+set @name='xx'
+set @name=11 合法
+
+查看 
+
+select @count
+
+可以声明在 begin 外部
+
+###
 
 ### 分区表
 
