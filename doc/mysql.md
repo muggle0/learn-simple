@@ -97,7 +97,17 @@ set @name=11 合法
 
 select @count
 
-可以声明在 begin 外部
+可以声明在 begin 外部只作用于当前会话
+
+局部变量只作用于begin end 且必须是第一句话
+
+声明 declare 变量名 类型
+declare 变量名 类型 值
+
+赋值 select count(*) into @count from table
+
+使用 select 局部变量名
+
 
 ###
 
