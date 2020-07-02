@@ -55,4 +55,27 @@ wc 统计文件内容信息
 
 date 查看日期
 
+cal 日历 
 
+clear 清屏
+
+管道 符号  |
+
+作用  用于 过滤 扩展处理 特殊语法
+
+ls | grep 'xxx' 
+
+hostname -f
+
+ps -ef 查看服务器进程信息
+-e 等价于 -A 显示全部进程
+-f 显示字段
+pid  进程id 
+ppid 父进程id 
+ppid 不存在为僵尸进程
+c 表示cpu 占用率
+stime 启动时间
+cmd 进程的名称或者对应的路径
+
+
+top 查看服务器进程占用资源
