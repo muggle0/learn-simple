@@ -166,8 +166,78 @@ Rename table 视图名 to 新视图名;
         END
 
 ### 分区表
+将一个表分成好几个区表
 
-###  执行计划
+range 范围分区
+
+list 类似range 不连续
+
+hash 对用户的表达式所返回的返回值进行分区
+
+key 类似hash 多列
+
+示例
+```java
+create table test (
+        id int 
+) partition by range(id)(
+        partition  p0 values less than(5)
+)
+```
+
+主要目的缩小表检索范围
 
 
+### 主从复制
+mysql 的复制类型 基于sql 基于行数据的 混合模式
+STATEMENT格式 优点：日志记录量相对较小，节约磁盘及网络I/0;
+            
+            缺点：对UUID(),USER(),这样的函数存在BUG
+优点：使MySQL主从复制更加安全
+
+缺点：记录日志量较大
+
+3）MIXED格式
+
+根据SQL语句由系统决定是基于段还是基于行来进行复制
+
+推荐使用：binlog_format=row
+
+1 线程 写入binlog 
+2线程 读取并写入relaylog
+3 线程写从库
+
+策略 异步 主库不去管从库是否同步成功
+
+半同步 只要一个从库接收到日志并写入relaylog就算成功
+
+同步 当主库执行完一个事务所有的从库都同步完才返回
+
+
+基于GTID复制的优缺点
+
+1）什么是GTID
+
+GTID即全局事务ID，其保证为每一个在主上提交的事务在复制集群中可以生成一个唯一的ID
+
+GTID=source_id:transaction_id
+
+2）优点：可以很方便的进行故障转移，从库不会丢失主库上的任何修改
+
+3）缺点：故障处理比较复杂，对执行的SQL有一定的限制
+
+
+主库配置
+
+```java
+server_id= 1 # 服务器id
+log-bin=xxx # binlog的文件名
+gtid_mode=on # gitd 模式
+
+binlog_format= row
+
+```
+半同步复制需要安装插件
+
+mysql主从模式默认是异步复制的，而MySQL Cluster是同步复制的，只要设置为相应的模式即是在使用相应的同步策略。
 
