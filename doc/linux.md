@@ -26,3 +26,33 @@ ls -lh /var
 
 pwd （当前路径）
 
+mkdir -p
+touch 创建文件
+
+cp -r 
+ls 文件颜色（蓝色是文件夹 黑色是文件 绿色是权限）
+
+vim 编辑器三种模式
+
+底线命令模式 
+输入模式
+命令模式
+
+输出重定向 （将输出的内容指定到目标 ）  > 和 >>  覆盖输出 追加输出
+cat 打开文件 文件合并
+cat a.txt b.txt > c.txt
+
+df -h 查看磁盘
+
+free -m 查看内存使用情况 -m表示 以mb为单位
+
+head  查看文件前n行 默认10 head -n xxx.txt 
+
+tail -n 查看最后几行
+less 较少内容查看文件 
+
+wc 统计文件内容信息
+
+date 查看日期
+
+
