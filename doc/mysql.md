@@ -109,9 +109,65 @@ declare 变量名 类型 值
 使用 select 局部变量名
 
 
-###
+### 存储过程
+
+call 存储过程名（实参列表）
+delimiter  $  
+create procedure test()
+begin
+ 
+ sql
+ 
+end $
+
+in 模式存储过程
+
+create procedure test(in xxx varchar(50) )
+out 模式存储过程
+
+delimiter $ 
+create procedure test(out xxx varchar(50))
+
+select name  into xxx  from table
+
+delimiter  ;
+inout 模式存储过程
+
+删除 drop procedure xxx;
+查看 show create procedure xxx
+
+### 视图
+
+create view xx as 
+select ...
+
+Mysql视图的定义在from关键字后面不能包含子查询
+
+alter view 视图名 as select 语句
+
+show create view 视图名;
+
+　drop view 视图名[,视图名…];
+Rename table 视图名 to 新视图名;
+只保存了sql逻辑不保存查询结果
+
+
+### 函数
+    CREATE FUNCTION 函数名(参数列表) RETURNS 返回类型
+
+        BEGIN
+
+           declare c int default 0
+           
+           select count(*) into c from table
+           
+           return c;
+
+        END
 
 ### 分区表
 
-### 
+###  执行计划
+
+
 
