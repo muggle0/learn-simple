@@ -63,7 +63,7 @@ clear 清屏
 
 作用  用于 过滤 扩展处理 特殊语法
 
-ls | grep 'xxx' 
+ls | grep 'xxx' ·
 
 hostname -f
 
@@ -77,5 +77,40 @@ c 表示cpu 占用率
 stime 启动时间
 cmd 进程的名称或者对应的路径
 
-
 top 查看服务器进程占用资源
+
+find /etc -name 'xxx'
+
+find /etc -type f 
+
+find /etc -type d
+
+service start stop restart 
+
+kill  66666 (pid )
+
+ifconfig 
+
+reboot  重启
+
+shutdown 关机
+
+uptime 开机时间
+
+netstat -tnlp  net状态
+
+-t 只显示tcp协议
+
+-n 信息转化
+
+-l 过滤 状态列的值为 listen的连接
+
+-p 显示发起连接的进程pid 
+
+uname  获取计算机系统信息
+
+man  命令手册
+
+Linux的运行模式
+
+linux 存在一个init 进程 pid 为1 该进程存在一个配置文件 inittab (/etc/inittab)
