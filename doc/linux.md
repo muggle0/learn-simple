@@ -114,3 +114,17 @@ man  命令手册
 Linux的运行模式
 
 linux 存在一个init 进程 pid 为1 该进程存在一个配置文件 inittab (/etc/inittab)
+
+用户级别 0 关机 1单用户  2多用户  3完全多用户 4其他
+
+用户与用户组
+
+添加用户 useradd 
+
+-g 指定用户组 
+
+-G 指定用户附加组
+
+-u 指定用户id 
+
+修改用户 usermod 
