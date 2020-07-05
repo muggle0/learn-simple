@@ -128,3 +128,28 @@ linux 存在一个init 进程 pid 为1 该进程存在一个配置文件 inittab
 -u 指定用户id 
 
 修改用户 usermod 
+
+设置用户密码 Linux 不允许无密码用户
+无密码处于锁定状态 
+
+passwd xxx 回车
+
+用户信息 /etc/shadow
+用户名：加密密码：最后一次修改时间：最小修改时间间隔：密码有效期：密码需要变更前的警告天数：密码过期后的宽限时间：账号失效时间：保留字段
+
+切换用户 su xxx
+
+删除用户 userdel  -r删除对应文件夹
+用户组 用户组的增删改查操作的是  /etc/group
+
+groupadd -g(同用户 -u)
+groupdel 
+
+网络设置 
+
+网卡配置文件位置：
+/etc/sysconfig/network-scripts
+
+网卡文件命名规则  ifcfg-xxx
+
+软连接
