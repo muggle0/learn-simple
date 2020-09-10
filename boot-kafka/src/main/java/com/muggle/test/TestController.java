@@ -23,7 +23,7 @@ public class TestController {
         kafkaTemplate.send("zhisheng", "test");
     }
 
-    @KafkaListener(topics = "zhisheng")
+    @KafkaListener(topics = "zhisheng",groupId = "test-consumer-group")
     public void listen(ConsumerRecord<?, ?> record) {
         Object value = record.value();
         System.out.println(value);
