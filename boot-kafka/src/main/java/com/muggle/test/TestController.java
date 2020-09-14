@@ -20,12 +20,12 @@ public class TestController {
 
     @Scheduled(cron = "*/15 * * * * ?")
     public void send() {
-        kafkaTemplate.send("zhisheng", "test");
+        kafkaTemplate.send("xxxxx", "test");
     }
 
-    @KafkaListener(topics = "zhisheng",groupId = "test-consumer-group")
-    public void listen(ConsumerRecord<?, ?> record) {
-        Object value = record.value();
+    @KafkaListener(topics = "xxxxx",groupId = "test-consumer-group")
+    public void listen(ConsumerRecord<?, String> record) {
+        String value = record.value();
         System.out.println(value);
     }
 
