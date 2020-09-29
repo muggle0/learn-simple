@@ -26,12 +26,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestController {
 
-    @Autowired
+//    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
     @Autowired
     KafkaProperties kafkaProperties;
+    @Autowired
     private   AdminClient adminClient;
-    @PostConstruct
+//    @PostConstruct
     public void init(){
          adminClient = KafkaAdminClient.create(kafkaProperties.buildAdminProperties());
     }
@@ -39,7 +40,6 @@ public class TestController {
 
     @Scheduled(cron = "*/15 * * * * ?")
     public void send() {
-
         kafkaTemplate.send("xxxxx", "test");
     }
 
@@ -49,7 +49,6 @@ public class TestController {
         ListTopicsResult listTopicsResult = adminClient.listTopics();
         Collection<TopicListing> topicListings = listTopicsResult.listings().get();
         System.out.println(value);
-
     }
 
 //    @Scheduled(cron = "*/15 * * * * ?")
@@ -61,7 +60,6 @@ public class TestController {
 //        ListTopicsResult listTopicsResult = client.listTopics();
 //        System.out.println(">>>>>>>>>>>>>>>>>>>获取列表");
 //    }
-
 //    https://blog.csdn.net/zzpdljd1991/article/details/90794156
 
 }

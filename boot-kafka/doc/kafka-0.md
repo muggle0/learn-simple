@@ -31,3 +31,6 @@ kafka 的运行依赖于 zookeeper，它的安装相对于 rabbitMQ来说比较�
 
 # springboot 与kafka
 
+https://docs.spring.io/spring-kafka/docs/current/reference/html/
+
+utterances
