@@ -1,4 +1,4 @@
-package com.example.tsfdemo;
+package com.example.tsfprovide;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,12 +6,12 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages={"com.example.tsfdemo.feign"})
-public class TsfDemoApplication {
+public class TsfProvideApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TsfDemoApplication.class, args);
+        SpringApplication.run(TsfProvideApplication.class, args);
     }
 
 }
