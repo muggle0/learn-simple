@@ -1524,4 +1524,17 @@ TCC 模式解决了跨服务操作的原子性问题，对数据库的操作为�
 ###  备注
 
 安全组设置 https://cloud.tencent.com/document/product/213/34601
+
+镜像登录 sudo docker login --username=100011923184  ccr.ccs.tencentyun.com Tx1977339740
+
+cd .. && mvn package org.springframework.boot:spring-boot-maven-plugin:2.2.5.RELEASE:build-info dockerfile:build
+
+
+DOCKER_HOST
+
+https://github.com/tencentyun/tsf-simple-demo/tree/release/1.18.0-finchley
+
+sudo docker push ccr.ccs.tencentyun.com/tsf_100011923184/docker-tsf-provider:[tag]
  
+ 
+sudo docker tag [ImageId] ccr.ccs.tencentyun.com/tsf_100011923184/docker-tsf-provider:[tag]
