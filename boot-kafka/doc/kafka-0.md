@@ -13,8 +13,16 @@ Kafka擅长处理数据量庞大的业务，例如使用Kafka做日志分析、�
 
 # kafka 安装及使用
 kafka 的运行依赖于 zookeeper，它的安装相对于 rabbitMQ来说比较简单。下面介绍Windows下 kafka的安装及其使用。
+虽然现在使用docker安装中间件很方便，但是本人还是比较喜欢手动档安装；另外如果有小伙伴对docker安装感兴趣，而自己的电脑又是win10专业版或企业版，
+可以直接安装docker。
+kafka是依赖于zookeeper的，所以我们先要安装zookeeper ，当然kafka的二进制包里面，包含了zookeeper 的安装包，我们不需要单独的再去下载ZK的安装包；
 
-
+ 在 kafka 官网下载 二进制的 tgz 压缩包： http://kafka.apache.org/downloads.html，解压后它的 bin/windows下有 zk的启动脚本和kafka的启动脚本，
+ zk的配置文件和kafka的配置文件在 config文件夹下，分别对应 zookeeper.properties和server.properties。
+ 由于本人对zk使用的频率也比较高，因此我是单独安装的zk，zk的安装及启动教程参考 ；
+ 
+ 下面我们对kafka进行配置及启动
+ 
 # kafka 原理
 
 # kafka 运行流程和文件存储机制
