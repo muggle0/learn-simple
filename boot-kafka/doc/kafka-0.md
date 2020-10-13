@@ -21,9 +21,22 @@ kafka是依赖于zookeeper的，所以我们先要安装zookeeper ，当然kafka
  zk的配置文件和kafka的配置文件在 config文件夹下，分别对应 zookeeper.properties和server.properties。
  由于本人对zk使用的频率也比较高，因此我是单独安装的zk，zk的安装及启动教程参考 ；
  
- 下面我们对kafka进行配置及启动
+ 下面我们对kafka进行配置及启动，配置文件说明：
+ ```java
+
+```
+ 
+ 启动脚本：
+ 
+ ```java
+
+```
+
+接下来我们做一下简单的测试：
  
 # kafka 原理
+
+kafka
 
 # kafka 运行流程和文件存储机制
 
@@ -39,6 +52,15 @@ kafka是依赖于zookeeper的，所以我们先要安装zookeeper ，当然kafka
 
 # springboot 与kafka
 
+## 在springboot中kafka的基本使用
+
+接下来让我们看看怎么在springboot中使用kafka,首先导入依赖
+```java
+
+```
+然后添加配置
+最后写个程序测试一下kafka的消息的接收和发送
+## kafka高级特性的使用 
 https://docs.spring.io/spring-kafka/docs/current/reference/html/
 
 utterances
