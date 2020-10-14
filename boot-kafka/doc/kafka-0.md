@@ -22,21 +22,46 @@ kafka是依赖于zookeeper的，所以我们先要安装zookeeper ，当然kafka
  由于本人对zk使用的频率也比较高，因此我是单独安装的zk，zk的安装及启动教程参考 ；
  
  下面我们对kafka进行配置及启动，配置文件说明：
- ```java
-
+ ```
+ # 对外暴露的服务端口
+advertised.listeners=PLAINTEXT://ip:9092
+# 机器的标识
+broker.id=1
+# kafka日志存储的位置
+log.dirs=c:xxx
+# zk的地址
+zookeeper.connect=localhost:2181
 ```
  
  启动脚本：
  
- ```java
+ ```bat
+.\bin\windows\kafka-server-start.bat .\config\server.properties
+```
+
+接下来我们做一下简单的测试。
+
+执行脚本
+```bat
+.\bin\windows\kafka-topics.bat --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+```
+
+该操作创建了一个 名为 test 的 kafka 主题，接下来我们可以在主题中写入消息并消费消息了。
+
+执行脚本
+```bat
+.\bin\windows\kafka-console-producer.bat --broker-list 127.0.0.1:9092 --topic test 
+xxx
+xxx
+```
+该操作创建了一个消息生产者，并发送消息 "xxx"
+
+执行脚本
+```bat
 
 ```
 
-接下来我们做一下简单的测试：
- 
 # kafka 原理
-
-kafka
 
 # kafka 运行流程和文件存储机制
 
