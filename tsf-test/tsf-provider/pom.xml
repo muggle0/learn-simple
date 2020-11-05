@@ -37,6 +37,7 @@
             <groupId>com.tencent.tsf</groupId>
             <artifactId>spring-cloud-tsf-starter</artifactId>
         </dependency>
+        <!--服务发现-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-consul-discovery</artifactId>
@@ -80,6 +81,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!--docker 插件-->
             <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
