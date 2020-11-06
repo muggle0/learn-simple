@@ -56,12 +56,14 @@ xxx
 ```
 该操作创建了一个消息生产者，并发送消息 "xxx"
 
-执行脚本
+执行脚本,消费消息：
 ```bat
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from-beginning
 
 ```
-
 # kafka 原理
+
+了解kafka原理之前
 
 # kafka 运行流程和文件存储机制
 
