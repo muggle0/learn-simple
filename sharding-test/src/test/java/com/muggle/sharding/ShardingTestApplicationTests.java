@@ -1,4 +1,4 @@
-package com.muggle.shardingtest;
+package com.muggle.sharding;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

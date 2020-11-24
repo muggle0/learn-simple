@@ -2,12 +2,14 @@ package com.muggle.test;
 
 import javax.annotation.PostConstruct;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.ListTopicsResult;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,15 +53,15 @@ public class TestController {
         System.out.println(value);
     }
 
-//    @Scheduled(cron = "*/15 * * * * ?")
-//    public void getTopic(){
-//        Collection<NewTopic> newTopics = new ArrayList<>(1);
-//        newTopics.add(new NewTopic("topic-kl",1,(short) 1));
-//        client.createTopics(newTopics);
-//        System.out.println("》》》》》》》》》》》》》》》 创建topic");
-//        ListTopicsResult listTopicsResult = client.listTopics();
-//        System.out.println(">>>>>>>>>>>>>>>>>>>获取列表");
-//    }
+    @Scheduled(cron = "*/15 * * * * ?")
+    public void getTopic(){
+        Collection<NewTopic> newTopics = new ArrayList<>(1);
+        newTopics.add(new NewTopic("topic-kl",1,(short) 1));
+        adminClient.createTopics(newTopics);
+        System.out.println("》》》》》》》》》》》》》》》 创建topic");
+        ListTopicsResult listTopicsResult = adminClient.listTopics();
+        System.out.println(">>>>>>>>>>>>>>>>>>>获取列表");
+    }
 //    https://blog.csdn.net/zzpdljd1991/article/details/90794156
 
 }
