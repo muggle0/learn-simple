@@ -57,13 +57,30 @@ xxx
 执行脚本,消费消息：
 ```bat
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from-beginning
-
 ```
+
+可以见到控制台消费了消息输出 'xxx' ；
+
+完成kafka的安装和基本操作后，我们后文会介绍kafka的相关原理
+
+
 # kafka 原理
 
-了解kafka原理之前
+kafka 原理图：
+https://img-blog.csdn.net/20160421172632084?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQv/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center
+
+kafka术语介绍：
+
+- 消息生产者
+- 消息消费者
+- 主题：
+- 消息分区
+- Broker：
+- 消费者分组：
+- Offset 
 
 # kafka 运行流程和文件存储机制
+
 
 # kafka producer 分区原则
 
