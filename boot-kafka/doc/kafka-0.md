@@ -57,6 +57,7 @@ xxx
 执行脚本,消费消息：
 ```bat
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from-beginning
+```
 
 ```
 # kafka 原理
@@ -75,6 +76,7 @@ kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from
 - Topic：主题，
 
 # kafka 运行流程和文件存储机制
+
 
 # kafka producer 分区原则
 
