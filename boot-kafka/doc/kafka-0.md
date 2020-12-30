@@ -57,7 +57,6 @@ xxx
 执行脚本,消费消息：
 ```bat
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from-beginning
-```
 
 ```
 # kafka 原理
@@ -67,16 +66,29 @@ kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from
 
 ## kafka的组成
 
-图一为kafka的发布订阅模型：
+下图为kafka的发布订阅模型：
 ![kafka发布订阅模型](kafka发布订阅模型.png)
 
 我们通过这个模型来说明kafka的组成部分：
 
-- producer：消息生产者，负责生产消息
-- Topic：主题，
+- Message：消息；
+- Producer：消息生产者，负责生产消息；
+- Consumer：消息的消费者，负责接收消费消息；
+- Topic：主题，可以理解为消息的分类，Kafka通过topic来对不同类别的队列进行隔离，每个push的消息必须制定属于哪个topic；
+- Partition：消息分区，为了提高可用性，每个topic可以包含多个分区，并将分区分布在不同的服务器上，同时设置其中一个为leader，其余几个通过复制来进行数据副本，保证集群在N-1个挂掉仍然可用；
+- Group： 消费者组，多个Consumer组成一个Group，用于负载均衡的进行消费；
+- Broker：指一个单机的kafka；
+- Cluster：kafka集群。
 
-# kafka 运行流程和文件存储机制
+## kafka 运行流程和文件存储机制
 
+kafka 总体流程可以粗略的归纳为：
+Producer 生产一个消息并指定消息的主题 Topic -> producer 将生产的消息投递给 kafka cluster -> kafka cluster 将消息根据 Topic 拆分成多个partition 存储到各个 broker 中 -> 消费者组订阅主题，负载均衡的消费消息。
+接下来我们细细分析 kafka 是怎么去做数据分区，保证消息的可靠送达，负载均衡等原理和机制。
+
+首先我们看kafka的分区机制。kafka 对于 topic 有一个分区的默认值，通过config/server.properties中通过配置项num.partitions来指定新建Topic的默认Partition数量，同时也可在创建Topic时通过参数指定或者在Topic创建之后通过Kafka提供的工具修改。生产者将数据写入到kafka主题后，kafka通过不同的策略将数据分配到不同分区中，常见的有三种策略，轮询策略，随机策略，和按键保存策略。而分区本身又会有多个副本，这多个副本中，只有一个是leader，而其他的都是follower。仅有leader副本可以对外提供服务。通常follower不和leader在同一个broker中，这样当leader 挂掉 follower 不会跟着挂，而是从众多follower中选一个出来作为leader继续提供服务。
+
+副本的机制显然有数据一致性的问题，我们假设一个场景
 
 # kafka producer 分区原则
 
