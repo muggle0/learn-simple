@@ -61,7 +61,18 @@ kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from
 ```
 # kafka 原理
 
-了解kafka原理之前
+这一章节我们学习 `kafka` 的组成部分，工作原理和运行的机制。消息队列一般包含两种模式，一种是点对点的模式，一种是发布订阅的模式。前文提到过 kafka 是一款基于发布订阅的消息队列。
+那么kafka是怎么去发布消息，怎么去保存消息，订阅消息的呢？首先我们从kafka的发布订阅模型开始分析。
+
+## kafka的组成
+
+图一为kafka的发布订阅模型：
+![kafka发布订阅模型](kafka发布订阅模型.png)
+
+我们通过这个模型来说明kafka的组成部分：
+
+- producer：消息生产者，负责生产消息
+- Topic：主题，
 
 # kafka 运行流程和文件存储机制
 
