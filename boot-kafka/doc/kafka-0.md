@@ -96,6 +96,18 @@ kafka通过不同的策略将数据分配到不同分区中，常见的有三种
 
 ![offset](kafka-partition-offset.png)
 
+
+通常由如下几种 Kafka Offset 的管理方式：
+
+- Spark Checkpoint：在 Spark Streaming 执行Checkpoint 操作时，将 Kafka Offset 一并保存到 HDFS 中。
+
+- HBASE、Redis 等外部 NOSQL 数据库：这一方式可以支持大吞吐量的 Offset 更新。
+
+- ZOOKEEPER：老版本的位移offset是提交到zookeeper中的，目录结构是 ：/consumers/<group.id>/offsets/ <topic>/<partitionId> ，当存在频繁的 Offset 更新时，ZOOKEEPER 集群本身可能成为瓶颈。
+
+- KAFKA：存入自身的一个特殊 Topic中，这种方式支持大吞吐量的Offset 更新，又不需要手动编写 Offset 管理程序或者维护一套额外的集群。
+
+
 后文我们会介绍关于 kafka 的 partition 与 offset 的一些机制，如数据存储与同步，分区原则，分区策略，可靠性保证，高效读写原理等。
 
 ## kafka 数据存储与同步
@@ -104,23 +116,49 @@ kafka通过不同的策略将数据分配到不同分区中，常见的有三种
 
 # kafka 可靠性保证
 
-# kafka 分区策略
-
 # offset
 
 # kafka 高效读写原理
+
 
 # springboot 与kafka
 
 ## 在springboot中kafka的基本使用
 
 接下来让我们看看怎么在springboot中使用kafka,首先导入依赖
+```xml
+<dependency>
+   <groupId>org.springframework.kafka</groupId>
+   <artifactId>spring-kafka</artifactId>
+</dependency>
+```
+然后启动项添加注解 `@EnableScheduling`，`@EnableKafka` 。第一个注解是用来添加springboot定时任务以方便测试，第二个注解是装配kafka 配置。
+
+接下来我们要在 application 的配置文件：
+
+```properties
+spring.kafka.consumer.bootstrap-servers=localhost:9092
+spring.kafka.consumer.group-id=test-consumer-group
+spring.kafka.consumer.auto-offset-reset=earliest
+spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.value-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+
+spring.kafka.producer.bootstrap-servers=localhost:9092
+spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value-serializer=org.apache.kafka.common.serialization.StringSerializer
+
+#消费监听接口监听的主题不存在时，默认会报错
+spring.kafka.listener.missing-topics-fatal=false
+
+```
+这里因为是demo，我就将生产者和消费者写在一个程序里面了。先测试一个简单的收发消息：
+
 ```java
 
 ```
-然后添加配置
 最后写个程序测试一下kafka的消息的接收和发送
 ## kafka高级特性的使用 
 https://docs.spring.io/spring-kafka/docs/current/reference/html/
 
-utterances
+u
+
