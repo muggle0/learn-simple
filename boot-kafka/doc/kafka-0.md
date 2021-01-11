@@ -59,6 +59,8 @@ xxx
 kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test --from-beginning
 
 ```
+
+
 # kafka 原理
 
 消息队列一般包含两种模式，一种是点对点的模式，一种是发布订阅的模式。前文提到过 kafka 是一款基于发布订阅的消息队列。
@@ -110,17 +112,25 @@ kafka通过不同的策略将数据分配到不同分区中，常见的有三种
 
 后文我们会介绍关于 kafka 的 partition 与 offset 的一些机制，如数据存储与同步，分区原则，分区策略，可靠性保证，高效读写原理等。
 
-kafka 原理深度解读
+
+
+# kafka 原理深度解读
 
 前文介绍了kafka的一些基本原理，接下来我们深入了解下关于kafka的一些机制和优化
 
 
 
-# partition 文件存储机制
+## partition 文件存储机制
+
 前文提到过，一个topic是分成多个partition 存储的；topic是逻辑上的概念，partition是物理上的概念，如图所示：
 ![partition](kafka_partition.png)
 通过图片我们可以看出，虽然每个partition内部是有序的，但对于整个topic而言它是无法保证有序性的。
-partition 的数据会以 日志文件的形式存储到磁盘中，在配置文件 `server.properties` 中通过属性 `log.dirs` 指定。在该文件夹下会根据topic和序号来创建文件夹，在该 partition 文件夹中以 `.log` 结尾的文件是实际存储数据的文件，当生产者生产数据，。以 `.index` 结尾的文件是索引文件，index 和log 组成一个 `segment`。 .log 文件默认只会保持7天内的数据，通过 `log.retention.hours` 配置项指定数据保持时长。当.log 文件超出最大值时会创建新的 .log文件和.index文件，也就是一个新的segment；其中文件的名称以消息起始偏移量命名。 `log.segment.bytes` 指定log文件的最大值。当我们去寻找一条消息的时候，会先根据偏移量来定位到属于哪一个 `segment`，再通过二分查找从index文件中寻找该偏移量对应的索引，再通过索引去log文件中找到真正的消息。
+partition 的数据会以 日志文件的形式存储到磁盘中，在配置文件 `server.properties` 中通过属性 `log.dirs` 指定。
+在该文件夹下会根据topic和序号来创建文件夹，在该 partition 文件夹中以 `.log` 结尾的文件是实际存储数据的文件，当生产者生产数据，。
+以 `.index` 结尾的文件是索引文件，index 和log 组成一个 `segment`。 .log 文件默认只会保持7天内的数据，通过 `log.retention.hours` 配置项指定数据保持时长。
+当.log 文件超出最大值时会创建新的 .log文件和.index文件，也就是一个新的segment；其中文件的名称以消息起始偏移量命名。 
+`log.segment.bytes` 指定log文件的最大值。当我们去寻找一条消息的时候，会先根据偏移量来定位到属于哪一个 `segment`，
+再通过二分查找从index文件中寻找该偏移量对应的索引，再通过索引去log文件中找到真正的消息。
 
 ## 数据可靠性保证
 为保证producer 发送的数据不丢失，broker 接收到数据后都需要对producer发送ack(确认接收) ，如果producer 未收到ack则会重新发送该条消息。producer 的 ack 策略又分为三种：

@@ -55,7 +55,7 @@ public class TestController {
 
     @Scheduled(cron = "*/15 * * * * ?")
     public void getTopic(){
-        kafkaTemplate.send()
+//        kafkaTemplate.send()
         Collection<NewTopic> newTopics = new ArrayList<>(1);
         newTopics.add(new NewTopic("topic-kl",1,(short) 1));
         adminClient.createTopics(newTopics);

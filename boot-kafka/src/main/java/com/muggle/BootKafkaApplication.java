@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableKafka@EnableScheduling
 @EnableKafka
 public class BootKafkaApplication {
 
