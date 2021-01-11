@@ -1,20 +1,17 @@
 package com.muggle.test;
 
-import javax.annotation.PostConstruct;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,14 +27,10 @@ public class TestController {
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
-    @Autowired
-    KafkaProperties kafkaProperties;
+
     @Autowired
     private   AdminClient adminClient;
-//    @PostConstruct
-    public void init(){
-         adminClient = KafkaAdminClient.create(kafkaProperties.buildAdminProperties());
-    }
+
 
 
     @Scheduled(cron = "*/15 * * * * ?")

@@ -201,6 +201,7 @@ kafka特性介绍完毕，接下来进入springboot实战章节
 接下来我们要在 application 的配置文件：
 
 ```properties
+# 生产者配置
 spring.kafka.consumer.bootstrap-servers=localhost:9092
 spring.kafka.consumer.group-id=test-consumer-group
 spring.kafka.consumer.auto-offset-reset=earliest
