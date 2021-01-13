@@ -180,9 +180,17 @@ kafka的producer生产数据，要以追加的形式写入到log文件中，这�
 ## kafka 集群特性
 
 kafka的集群中会有一个broker会被选举为 controller，负责管理集群broker的上下线，所有topic的副本leader的选举工作，
-而controller的这些管理工作都是需要依赖于kafka的。下图为leader的选举示意图：
+而controller的这些管理工作都是需要依赖于kafka的。
+下图为leader的选举示意图：
 
-![range](leader.png)
+![range](leader1.png)
+
+第一步：kafka利用zookeeper去选举出controller；第二步：kafka通过controller选指定出leader。
+
+# kafka 事务
+
+## kafka 事务介绍
+
 
 kafka特性介绍完毕，接下来进入springboot实战章节
 # springboot 与kafka
@@ -208,6 +216,7 @@ spring.kafka.consumer.auto-offset-reset=earliest
 spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
 spring.kafka.consumer.value-deserializer=org.apache.kafka.common.serialization.StringDeserializer
 
+# 消费者配置
 spring.kafka.producer.bootstrap-servers=localhost:9092
 spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
 spring.kafka.producer.value-serializer=org.apache.kafka.common.serialization.StringSerializer
@@ -216,12 +225,121 @@ spring.kafka.producer.value-serializer=org.apache.kafka.common.serialization.Str
 spring.kafka.listener.missing-topics-fatal=false
 
 ```
-这里因为是demo，我就将生产者和消费者写在一个程序里面了。先测试一个简单的收发消息：
+
+注册一个 `AdminClient` :
+```java
+    @Bean
+    public AdminClient init( KafkaProperties kafkaProperties){
+        return KafkaAdminClient.create(kafkaProperties.buildAdminProperties());
+    }
+```
+
+这里因为是demo，我就将生产者和消费者写在一个程序里面了。
+
+先测试一个简单的收发消息：
+```java
+@RestController
+public class TestController {
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired
+    private   AdminClient adminClient;
+
+    @Scheduled(cron = "*/15 * * * * ?")
+    public void send() {
+        kafkaTemplate.send("xxxxx", "test");
+    }
+
+    @KafkaListener(topics = "xxxxx",groupId = "test-consumer-group")
+    public void listen(ConsumerRecord<?, String> record) throws ExecutionException, InterruptedException {
+        String value = record.value();
+        System.out.println(value);
+    }
+}
+```
+这里我调用了`kafkaTemplate.send` 方法发送消息,第一个参数是消息的主题,第二个参数是消息.
+这里我并没有先创建主题,直接往主题里面发消息了,框架会给你直接创建一个默认的主题.
+我们也可以直接创建一个主题:
+```java
+    @Bean
+    public NewTopic topic() {
+        return new NewTopic("topic-test", 1, (short) 1);
+    }
+```
+当然像 rabbitMQ 的api 那样,spring boot 还非常贴心的准备了 topic 建造者类:
+```java
+@Bean
+public NewTopic topic1() {
+    return TopicBuilder.name("thing1")
+            .partitions(10)
+            .replicas(3)
+            .compact()
+            .build();
+}
+```
+
+第一个参数是主题名称,第二个参数是分区数,第三个分区是副本数(包括leader).
+
+我们可以通过 `AdminClient` 查看 主题信息:
 
 ```java
+    public String getTopic() throws ExecutionException, InterruptedException {
+        ListTopicsResult listTopicsResult = adminClient.listTopics();
+        Collection<TopicListing> topicListings = listTopicsResult.listings().get();
+        System.out.println(">>>>>>>>>>>>>>>>>>>获取列表");
+        return "success";
+    }
+``` 
+`ListTopicsResult` 的方法返回值都是 `Future` 类型的,这意味这它是异步的,使用的时候需要注意这一点.
 
+和rabbitMQ 类似,kafka 给我们准备了一个默认主题:
+```java
+    @Scheduled(cron = "*/15 * * * * ?")
+    public void sendDefault() {
+        kafkaTemplate.sendDefault("xxx");
+    }
 ```
-最后写个程序测试一下kafka的消息的接收和发送
+这条消息会被发送到名为 `topic.quick.default` 的主题当中去.
+我们要注意 `kafkaTemplate.send` 它的返回值是`ListenableFuture`,从名字我们就能知道它实际上是一个异步的方法,
+我们可以通过 `ListenableFuture.addCallback` 方法去指定回调函数:
+```java
+   @Scheduled(cron = "*/15 * * * * ?")
+    public void send() {
+        ListenableFuture<SendResult<String, String>> send = kafkaTemplate.send("xxxxx", "test");
+        send.addCallback(new ListenableFutureCallback(){
+            @Override
+            public void onSuccess(Object o) {
+
+            }
+            @Override
+            public void onFailure(Throwable throwable) {
+                
+            }
+        });
+    }
+```
+我们也可以通过 `ListenableFuture.get` 方法让它阻塞:
+```java
+    //    @Scheduled(cron = "*/15 * * * * ?")
+    public void send1() {
+        try {
+            kafkaTemplate.send("xxxxx", "test").get(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+```
+
+kafka 相关基本的api就介绍到这里了,源码可以上 `https://github.com/muggle0/learn-simple` 去找.
+
+未完待续...
+
 ## kafka高级特性的使用 
 https://docs.spring.io/spring-kafka/docs/current/reference/html/
 
