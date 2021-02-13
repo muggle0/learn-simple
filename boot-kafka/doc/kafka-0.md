@@ -344,3 +344,19 @@ kafka 相关基本的api就介绍到这里了,源码可以上 `https://github.co
 https://docs.spring.io/spring-kafka/docs/current/reference/html/
 
 
+## kafka事务
+
+kafka 的事务是从0.11 版本开始支持的，kafka 的事务是基于 Exactly Once 语义的，它能保证生产或消费消息在跨分区和会话的情况下要么全部成功要么全部失败
+
+### 生产者事务
+
+当生产者投递一条事务性的消息时，会先获取一个 transactionID ，并将Producer 获得的PID 和 transactionID 绑定，当 Producer 重启，Producer
+会根据当前事务的 transactionID 获取对应的PID。
+kafka 管理事务是通过其组件 Transaction Coordinator 来实现的，这个组件管理每个事务的状态，Producer 可以通过transactionID 从这个组件中获得
+对应事务的状态，该组件还会将事务状态持久化到kafka一个内部的 Topic 中。
+生产者事务的场景：
+一批消息写入 a、b、c 三个分区，如果 ab写入成功而c失败，那么kafka就会根据事务的状态对消息进行回滚，将ab写入的消息剔除掉并通知 Producer 投递消息失败。
+
+### 消费者事务
+
+消费者事务的一致性比较弱，只能够保证消费者消费消息是精准一次的（有且只有一次），
