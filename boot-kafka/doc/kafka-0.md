@@ -280,6 +280,24 @@ public NewTopic topic1() {
 }
 ```
 
+还可以通过 AdminClient 创建主题：
+
+```java
+    @Autowired
+    private   AdminClient adminClient;
+
+    public String createTopic(){
+        Collection<NewTopic> newTopics = new ArrayList<>(1);
+        newTopics.add(new NewTopic("topic-a",1,(short) 1));
+        adminClient.createTopics(newTopics);
+        System.out.println("》》》》》》》》》》》》》》》 创建topic");
+        ListTopicsResult listTopicsResult = adminClient.listTopics();
+        System.out.println(">>>>>>>>>>>>>>>>>>>获取列表");
+        return "success";
+    }
+```
+
+
 第一个参数是主题名称,第二个参数是分区数,第三个分区是副本数(包括leader).
 
 我们可以通过 `AdminClient` 查看 主题信息:
@@ -336,9 +354,27 @@ public NewTopic topic1() {
     }
 ```
 
+
+
 kafka 相关基本的api就介绍到这里了,源码可以上 `https://github.com/muggle0/learn-simple` 去找.
 
 未完待续...
+
+# kafka 事务消息
+
+Spring-kafka自动注册的KafkaTemplate实例是不具有事务消息发送能力的。需要配置属性：
+
+
+```shell script
+spring.kafka.producer.acks=-1
+spring.kafka.producer.transaction-id-prefix=kafka_tx
+```
+
+
+当激活事务时 kafkaTemplate 就只能发送事务消息了，发送非事务的消息会报异常。
+发送事务消息的方法有两种，一种是通过 kafkaTemplate
+
+
 
 ## kafka高级特性的使用 
 https://docs.spring.io/spring-kafka/docs/current/reference/html/
@@ -364,4 +400,6 @@ kafka 管理事务是通过其组件 Transaction Coordinator 来实现的，这�
 。
 
 
+
+https://blog.csdn.net/zzpdljd1991/article/details/90794156
 

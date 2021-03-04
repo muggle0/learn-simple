@@ -20,6 +20,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,7 +78,7 @@ public class TestController {
     public void sendDefault() {
         kafkaTemplate.sendDefault("xxx");
     }
-//    @KafkaListener(topics = "xxxxx",groupId = "test-consumer-group")
+    @KafkaListener(topics = "xxxxx",groupId = "test-consumer-group")
     public void listen(ConsumerRecord<?, String> record) throws ExecutionException, InterruptedException {
         String value = record.value();
         System.out.println(value);
@@ -105,7 +106,16 @@ public class TestController {
         return "success";
     }
 
-
+    //@Transactional
+//    @Scheduled(cron = "*/15 * * * * ?")
+    public void sendTrans() {
+      kafkaTemplate.executeInTransaction(t ->{
+          t.send("xxxxx","test1");
+          t.send("xxxxx","test2");
+          return true;
+      }
+          );
+    }
 
 
 }
