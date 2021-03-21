@@ -15,7 +15,9 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -40,6 +42,11 @@ public class TestController {
 
     @Autowired
     private   AdminClient adminClient;
+
+    @Autowired
+    KafkaListenerEndpointRegistry listenerRegistry;
+
+    int i=1;
 
 //    @Scheduled(cron = "*/15 * * * * ?")
     public void send() {
@@ -117,5 +124,33 @@ public class TestController {
           );
     }
 
+    @Transactional(rollbackFor = Exception.class)
+//    @Scheduled(cron = "*/15 * * * * ?")
+    public void sendFoo() {
+        kafkaTemplate.send("topic_input", "test");
+
+    }
+
+
+    @KafkaListener( topics = "topic_input",autoStartup ="false" )
+    public void listen(ConsumerRecord<?, String> record, Acknowledgment ack) {
+        System.out.println("消费消息"+record.value());
+        ack.acknowledge();
+    }
+
+    @KafkaListener( id = "listener1",topics = "test",autoStartup ="false" )
+    public void testStart(ConsumerRecord<?, String> record){
+        System.out.println(record.value());
+    }
+
+    @Scheduled(cron = "*/15 * * * * ?")
+    @Transactional
+    public void testListener(){
+        if (i==3){
+            listenerRegistry.getListenerContainer("listener1").start();
+        }
+        System.out.println("生产者生产消息"+i++);
+        kafkaTemplate.send("test","xxx"+i);
+    }
 
 }
