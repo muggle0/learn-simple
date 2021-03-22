@@ -12,11 +12,14 @@ import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
+import org.springframework.kafka.requestreply.RequestReplyFuture;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -45,7 +48,10 @@ public class TestController {
     private   AdminClient adminClient;
 
     @Autowired
-    KafkaListenerEndpointRegistry listenerRegistry;
+    private  KafkaListenerEndpointRegistry listenerRegistry;
+
+    @Autowired
+    ReplyingKafkaTemplate<String, String, String> replyingTemplate;
 
     int i=1;
 
@@ -167,10 +173,31 @@ public class TestController {
         System.out.println(record.value());
     }
 
-    @Scheduled(cron = "*/15 * * * * ?")
+//    @Scheduled(cron = "*/15 * * * * ?")
     @Transactional
     public void producerTest(){
         kafkaTemplate.send("send-a","xxxxxxxxxxxxxx");
+    }
+
+    @Scheduled(cron = "*/15 * * * * ?")
+    @Transactional
+    public void returnTestProducer(){
+        ProducerRecord<String, String> record = new ProducerRecord<>("topic-return", "test-return");
+        RequestReplyFuture<String, String, String> replyFuture = replyingTemplate.sendAndReceive(record);
+        try {
+            String value = replyFuture.get().value();
+            System.out.println(value);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @KafkaListener(topics = "topic-return")
+    @SendTo
+    public String listen(String message) {
+        return "consumer return:".concat(message);
     }
 
 }
