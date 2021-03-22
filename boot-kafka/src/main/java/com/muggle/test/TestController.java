@@ -19,6 +19,7 @@ import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -143,7 +144,7 @@ public class TestController {
         System.out.println(record.value());
     }
 
-    @Scheduled(cron = "*/15 * * * * ?")
+//    @Scheduled(cron = "*/15 * * * * ?")
     @Transactional
     public void testListener(){
         if (i==3){
@@ -151,6 +152,25 @@ public class TestController {
         }
         System.out.println("生产者生产消息"+i++);
         kafkaTemplate.send("test","xxx"+i);
+    }
+
+
+    @KafkaListener(topics = "send-a")
+    @SendTo("send-b")
+    public String sendTest0(ConsumerRecord<?, String> record){
+        System.out.println(record.value());
+        return "转发消息"+record.value();
+    }
+
+    @KafkaListener(topics = "send-b")
+    public void sendTest1(ConsumerRecord<?, String> record){
+        System.out.println(record.value());
+    }
+
+    @Scheduled(cron = "*/15 * * * * ?")
+    @Transactional
+    public void producerTest(){
+        kafkaTemplate.send("send-a","xxxxxxxxxxxxxx");
     }
 
 }

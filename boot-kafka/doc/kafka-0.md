@@ -452,8 +452,34 @@ public class test {
 通过观察窗口输出就能看到，生产者生产了20条数据后消费者监听器才开始启动消费。
 
 ## 消息转发
+kafka 消费者可以将消费到的消息转发到指定的主题中去，比如一条消息需要经过多次流转加工才能走完整个业务流程，需要多个consumer来配合完成。
+转发代码示例如下：
+
+```java
+
+    @KafkaListener(topics = "send-a")
+    @SendTo("send-b")
+    public String sendTest0(ConsumerRecord<?, String> record){
+        System.out.println(record.value());
+        return "转发消息"+record.value();
+    }
+
+    @KafkaListener(topics = "send-b")
+    public void sendTest1(ConsumerRecord<?, String> record){
+        System.out.println(record.value());
+    }
+
+    @Scheduled(cron = "*/15 * * * * ?")
+    @Transactional
+    public void producerTest(){
+        kafkaTemplate.send("send-a","xxxxxxxxxxxxxx");
+    }
+
+```
 
 ## 生产者获取消费者响应
+
+
 
 
 ## kafka高级特性的使用 
