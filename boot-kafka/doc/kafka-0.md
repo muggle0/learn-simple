@@ -417,8 +417,9 @@ spring.kafka.listener.ack-mode=manual
 对于某些业务场景这个功能还是很必要的，比如消费消息的同时导致写库异常，数据库回滚，那么消息也不应该被ack。
 
 ## 消费者监听器生命周期控制
-消费者监听器有三个生命周期：启动、停止、继续；如果我们想控制消费者监听器生命周期，需要修改` @KafkaListener` 的 `autoStartup` 属性为false，然后通过
-`KafkaListenerEndpointRegistry` 控制监听器的启动停止继续：
+消费者监听器有三个生命周期：启动、停止、继续；如果我们想控制消费者监听器生命周期，需要修改` @KafkaListener` 的 `autoStartup` 属性为false，
+并给监听器 id 属性赋值
+然后通过`KafkaListenerEndpointRegistry` 控制id 对应的监听器的启动停止继续：
 
 ```java
 import org.springframework.stereotype.Service;
