@@ -34,6 +34,8 @@ public class KafkaConfig {
         return new NewTopic("topic-kl", 1, (short) 1);
     }
 
+
+
     @Bean
     public AdminClient init( KafkaProperties kafkaProperties){
         return KafkaAdminClient.create(kafkaProperties.buildAdminProperties());
@@ -57,18 +59,26 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String,String> producerFactory() {
-        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    public ProducerFactory<String,String> producerFactory(KafkaProperties properties) {
+        DefaultKafkaProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(properties.buildProducerProperties());
+        producerFactory.setTransactionIdPrefix(properties.getProducer().getTransactionIdPrefix());
+        return  producerFactory;
+//        return new DefaultKafkaProducerFactory<>(properties.producerConfigs(properties));
     }
 
-    public Map<String, Object> producerConfigs() {
+    public Map<String, Object> producerConfigs(KafkaProperties properties) {
         Map<String, Object> props = new HashMap<>();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,"10.128.100.100:9092");
+        //用于建立与kafka集群的连接，这个list仅仅影响用于初始化的hosts，来发现全部的servers。 格式：host1:port1,host2:port2,…，
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,String.join(",",properties.getBootstrapServers()));
+        // 重试次数
         props.put(ProducerConfig.RETRIES_CONFIG, 3);
+        // Producer可以将发往同一个Partition的数据做成一个Produce Request发送请求以减少请求次数，该值即为每次批处理的大小,若将该值设为0，则不会进行批处理
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
+        // Producer可以用来缓存数据的内存大小。该值实际为RecordAccumulator类中的BufferPool，即Producer所管理的最大内存。
         props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
-        //发送一次message最大大小，默认是1M,这里设置为20M
+        //发送一次message最大大小，默认是1M
         //props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 20971520);
+        // 序列化器
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return props;
