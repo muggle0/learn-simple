@@ -189,8 +189,32 @@ kafka的集群中会有一个broker会被选举为 controller，负责管理集�
 
 # kafka 事务
 
-## kafka 事务介绍
+## kafka事务
 
+kafka 的事务是从0.11 版本开始支持的，kafka 的事务是基于 Exactly Once 语义的，它能保证生产或消费消息在跨分区和会话的情况下要么全部成功要么全部失败
+
+### 生产者事务
+
+当生产者投递一条事务性的消息时，会先获取一个 transactionID ，并将Producer 获得的PID 和 transactionID 绑定，当 Producer 重启，Producer
+会根据当前事务的 transactionID 获取对应的PID。
+kafka 管理事务是通过其组件 Transaction Coordinator 来实现的，这个组件管理每个事务的状态，Producer 可以通过transactionID 从这个组件中获得
+对应事务的状态，该组件还会将事务状态持久化到kafka一个内部的 Topic 中。
+生产者事务的场景：
+一批消息写入 a、b、c 三个分区，如果 ab写入成功而c失败，那么kafka就会根据事务的状态对消息进行回滚，将ab写入的消息剔除掉并通知 Producer 投递消息失败。
+
+### 消费者事务
+
+消费者事务的一致性比较弱，只能够保证消费者消费消息是精准一次的（有且只有一次）。消费者有一个参数 islation.level，这个参数指定的是事务的隔离级别。
+它的默认值是 read_uncommitted（未提交读），意思是消费者可以消费未commit的消息。当参数设置为 read_committed，则消费者不能消费到未commit的消息。
+
+### 事务的使用场景
+
+kafka事务主要是为了保证数据的一致性，现列举如下几个场景供读者参考：
+
+- producer发的多条消息组成一个事务，这些消息需要对consumer同时可见或者同时不可见；
+- producer可能会给多个topic发送消息，需要保证消息要么全部发送成功要么全部发送失败（操作的原子性）；
+- 消费者 消费一个topic，然后做处理再发到另一个topic，这个消费和转发的动作应该在同一事物中；
+- 如果下游消费者只有等上游消息事务提交以后才能读到，当吞吐量大的时候就会有问题，因此有了 read committed和read uncommitted两种事务隔离级别
 
 kafka特性介绍完毕，接下来进入springboot实战章节
 # springboot 与kafka
@@ -479,39 +503,124 @@ kafka 消费者可以将消费到的消息转发到指定的主题中去，比�
 ```
 
 ## 生产者获取消费者响应
-结合 `@sendTo注解` 和 `ReplyingKafkaTemplate` 类 生产者可以获取消费者消费消息的结果
-示例：
+结合 `@sendTo注解` 和 `ReplyingKafkaTemplate` 类 生产者可以获取消费者消费消息的结果;
+因为 ReplyingKafkaTemplate 是kafkaTemplate 的一个子类，当你往spring 容器注册 这个bean,
+kafkaTemplate 的自动装配就会关闭，但是kafkaTemplate 是必须的，因此你需要把这两个bean 都手动注册上。 
+配置示例：
 
 ```java 
 
+@Configuration
+public class KafkaConfig {
 
+    @Bean
+    public NewTopic topic2() {
+        return new NewTopic("topic-kl", 1, (short) 1);
+    }
+
+
+
+    @Bean
+    public AdminClient init( KafkaProperties kafkaProperties){
+        return KafkaAdminClient.create(kafkaProperties.buildAdminProperties());
+    }
+
+    /**
+     * 同步的kafka需要ReplyingKafkaTemplate,指定repliesContainer
+     *
+     * @param producerFactory
+     * @param repliesContainer
+     * @return
+     */
+    @Bean
+    public ReplyingKafkaTemplate<String, String, String> replyingTemplate(
+        ProducerFactory<String, String> producerFactory,
+        ConcurrentMessageListenerContainer<String, String> repliesContainer) {
+        ReplyingKafkaTemplate template = new ReplyingKafkaTemplate<>(producerFactory, repliesContainer);
+        //同步相应超时时间：10s
+        template.setReplyTimeout(10000);
+        return template;
+    }
+
+    @Bean
+    public ProducerFactory<String,String> producerFactory(KafkaProperties properties) {
+        DefaultKafkaProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(properties.buildProducerProperties());
+        producerFactory.setTransactionIdPrefix(properties.getProducer().getTransactionIdPrefix());
+        return  producerFactory;
+//        return new DefaultKafkaProducerFactory<>(properties.producerConfigs(properties));
+    }
+
+    public Map<String, Object> producerConfigs(KafkaProperties properties) {
+        Map<String, Object> props = new HashMap<>();
+        //用于建立与kafka集群的连接，这个list仅仅影响用于初始化的hosts，来发现全部的servers。 格式：host1:port1,host2:port2,…，
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,String.join(",",properties.getBootstrapServers()));
+        // 重试次数
+        props.put(ProducerConfig.RETRIES_CONFIG, 3);
+        // Producer可以将发往同一个Partition的数据做成一个Produce Request发送请求以减少请求次数，该值即为每次批处理的大小,若将该值设为0，则不会进行批处理
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
+        // Producer可以用来缓存数据的内存大小。该值实际为RecordAccumulator类中的BufferPool，即Producer所管理的最大内存。
+        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
+        //发送一次message最大大小，默认是1M
+        //props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 20971520);
+        // 序列化器
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        return props;
+    }
+
+    /**
+     * 指定consumer返回数据到指定的topic
+     * @return
+     */
+    @Bean
+    public ConcurrentMessageListenerContainer<String, String>
+    repliesContainer(ConcurrentKafkaListenerContainerFactory<String, String> containerFactory) {
+        ConcurrentMessageListenerContainer<String, String> repliesContainer =
+            containerFactory.createContainer("topic-return");
+        repliesContainer.setAutoStartup(true);
+        return repliesContainer;
+    }
+
+    @Bean
+//    @ConditionalOnMissingBean(KafkaTemplate.class)
+    public KafkaTemplate<?, ?> kafkaTemplate(ProducerFactory<String, String> kafkaProducerFactory,
+                                             ObjectProvider<RecordMessageConverter> messageConverter,KafkaProperties properties) {
+        KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(kafkaProducerFactory);
+        messageConverter.ifUnique(kafkaTemplate::setMessageConverter);
+        kafkaTemplate.setProducerListener( new LoggingProducerListener<>());
+        kafkaTemplate.setDefaultTopic(properties.getTemplate().getDefaultTopic());
+        return kafkaTemplate;
+    }
+
+
+}
 ```
 
+生产者接收消费者返回值（这俩最好不要开到一个应用中，否则会很容易生产者超时，观察不到返回的结果）：
 
-## kafka高级特性的使用 
-https://docs.spring.io/spring-kafka/docs/current/reference/html/
+```java
+
+    @Scheduled(cron = "*/1 * * * * ?")
+    @Transactional
+    public void returnTestProducer(){
+        ProducerRecord<String, String> record = new ProducerRecord<>("topic-return", "test-return");
+        RequestReplyFuture<String, String, String> replyFuture = replyingTemplate.sendAndReceive(record);
+        try {
+            String value = replyFuture.get().value();
+            System.out.println(value);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @KafkaListener(topics = "topic-return")
+    @SendTo
+    public String listen(String message) {
+        return "consumer return:".concat(message);
+    }
 
 
-## kafka事务
-
-kafka 的事务是从0.11 版本开始支持的，kafka 的事务是基于 Exactly Once 语义的，它能保证生产或消费消息在跨分区和会话的情况下要么全部成功要么全部失败
-
-### 生产者事务
-
-当生产者投递一条事务性的消息时，会先获取一个 transactionID ，并将Producer 获得的PID 和 transactionID 绑定，当 Producer 重启，Producer
-会根据当前事务的 transactionID 获取对应的PID。
-kafka 管理事务是通过其组件 Transaction Coordinator 来实现的，这个组件管理每个事务的状态，Producer 可以通过transactionID 从这个组件中获得
-对应事务的状态，该组件还会将事务状态持久化到kafka一个内部的 Topic 中。
-生产者事务的场景：
-一批消息写入 a、b、c 三个分区，如果 ab写入成功而c失败，那么kafka就会根据事务的状态对消息进行回滚，将ab写入的消息剔除掉并通知 Producer 投递消息失败。
-
-### 消费者事务
-
-消费者事务的一致性比较弱，只能够保证消费者消费消息是精准一次的（有且只有一次）。消费者有一个参数 islation.level，这个参数指定的是事务的隔离级别。
-它的默认值是 read_uncommitted（未提交读），意思是消费者可以消费未commit的消息。当参数设置为 read_committed，则消费者不能消费到未commit的消息
-。
-
-
-
-https://blog.csdn.net/zzpdljd1991/article/details/90794156
+```
 

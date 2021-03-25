@@ -179,7 +179,7 @@ public class TestController {
         kafkaTemplate.send("send-a","xxxxxxxxxxxxxx");
     }
 
-    @Scheduled(cron = "*/15 * * * * ?")
+    @Scheduled(cron = "*/1 * * * * ?")
     @Transactional
     public void returnTestProducer(){
         ProducerRecord<String, String> record = new ProducerRecord<>("topic-return", "test-return");

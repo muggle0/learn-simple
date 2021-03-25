@@ -6,15 +6,21 @@ import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.requestreply.ReplyingKafkaTemplate;
+import org.springframework.kafka.support.LoggingProducerListener;
+import org.springframework.kafka.support.ProducerListener;
+import org.springframework.kafka.support.converter.RecordMessageConverter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,15 +49,15 @@ public class KafkaConfig {
 
     /**
      * 同步的kafka需要ReplyingKafkaTemplate,指定repliesContainer
+     *
      * @param producerFactory
      * @param repliesContainer
      * @return
      */
     @Bean
     public ReplyingKafkaTemplate<String, String, String> replyingTemplate(
-            ProducerFactory<String, String> producerFactory,
-            ConcurrentMessageListenerContainer<String, String> repliesContainer) {
-
+        ProducerFactory<String, String> producerFactory,
+        ConcurrentMessageListenerContainer<String, String> repliesContainer) {
         ReplyingKafkaTemplate template = new ReplyingKafkaTemplate<>(producerFactory, repliesContainer);
         //同步相应超时时间：10s
         template.setReplyTimeout(10000);
@@ -89,12 +95,24 @@ public class KafkaConfig {
      * @return
      */
     @Bean
-    public ConcurrentMessageListenerContainer<String, String> repliesContainer(ConcurrentKafkaListenerContainerFactory<String, String> containerFactory) {
+    public ConcurrentMessageListenerContainer<String, String>
+    repliesContainer(ConcurrentKafkaListenerContainerFactory<String, String> containerFactory) {
         ConcurrentMessageListenerContainer<String, String> repliesContainer =
-                containerFactory.createContainer("REPLY_ASYN_MESSAGE");
-        repliesContainer.getContainerProperties().setGroupId("replies_message_group");
-        repliesContainer.setAutoStartup(false);
+            containerFactory.createContainer("topic-return");
+        repliesContainer.setAutoStartup(true);
         return repliesContainer;
     }
+
+    @Bean
+//    @ConditionalOnMissingBean(KafkaTemplate.class)
+    public KafkaTemplate<?, ?> kafkaTemplate(ProducerFactory<String, String> kafkaProducerFactory,
+                                             ObjectProvider<RecordMessageConverter> messageConverter,KafkaProperties properties) {
+        KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(kafkaProducerFactory);
+        messageConverter.ifUnique(kafkaTemplate::setMessageConverter);
+        kafkaTemplate.setProducerListener( new LoggingProducerListener<>());
+        kafkaTemplate.setDefaultTopic(properties.getTemplate().getDefaultTopic());
+        return kafkaTemplate;
+    }
+
 
 }
