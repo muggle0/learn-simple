@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    @PostMapping
+    @PostMapping("/test")
     public String test0(){
         return "test1>>>>>>>>>>>>>>>>>";
     }
