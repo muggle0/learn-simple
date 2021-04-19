@@ -1,4 +1,4 @@
-package com.muggle.snetinel.controller;
+package com.muggle.sentinel.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import org.springframework.web.bind.annotation.GetMapping;
