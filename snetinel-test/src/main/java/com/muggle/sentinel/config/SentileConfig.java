@@ -32,10 +32,8 @@ public class SentileConfig {
         rule1.setResource("test.hello");
         rule1.setGrade(RuleConstant.FLOW_GRADE_QPS);
         rule1.setCount(1);   // 每秒调用最大次数为 1 次
-
         List<FlowRule> rules = new ArrayList<>();
         rules.add(rule1);
-
         // 将控制规则载入到 Sentinel
         com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager.loadRules(rules);
     }
