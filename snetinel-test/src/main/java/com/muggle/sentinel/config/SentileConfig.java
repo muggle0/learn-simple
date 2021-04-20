@@ -3,6 +3,7 @@ package com.muggle.sentinel.config;
 import com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,10 +32,11 @@ public class SentileConfig {
         FlowRule rule1 = new FlowRule();
         rule1.setResource("test.hello");
         rule1.setGrade(RuleConstant.FLOW_GRADE_QPS);
-        rule1.setCount(1);   // 每秒调用最大次数为 1 次
+        // 每秒调用最大次数为 1 次
+        rule1.setCount(1);
         List<FlowRule> rules = new ArrayList<>();
         rules.add(rule1);
         // 将控制规则载入到 Sentinel
-        com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager.loadRules(rules);
+        FlowRuleManager.loadRules(rules);
     }
 }

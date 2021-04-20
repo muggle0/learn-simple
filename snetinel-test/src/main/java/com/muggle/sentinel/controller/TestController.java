@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @GetMapping("/test")
-    @SentinelResource(value = "test.hello",fallback = "helloError")
+    @SentinelResource(value = "test.hello",fallback = "testFallback")
     public String test(){
         return "success";
     }
@@ -25,14 +25,14 @@ public class TestController {
     public String test0(){
         try {
             Entry resourceName = SphU.entry("test.hello");
-            return resourceName.toString();
+            return resourceName.getCreateTime()+"";
         } catch (BlockException e) {
             e.printStackTrace();
             return "error";
         }
     }
 
-    public String helloError(String name,Throwable e){
+    public String testFallback(String name){
         return  "xxx";
     }
 
