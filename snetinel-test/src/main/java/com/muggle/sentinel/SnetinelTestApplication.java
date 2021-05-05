@@ -1,4 +1,4 @@
-package com.muggle.snetinel;
+package com.muggle.sentinel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
