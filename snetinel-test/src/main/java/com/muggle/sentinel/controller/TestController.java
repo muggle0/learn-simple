@@ -25,16 +25,26 @@ public class TestController {
     public String test0(){
         try {
             Entry resourceName = SphU.entry("test.hello");
-            return resourceName.getCreateTime()+"";
+            return resourceName.getCreateTimestamp() + "";
         } catch (BlockException e) {
             e.printStackTrace();
             return "error";
         }
     }
 
-    public String testFallback(String name){
-        return  "xxx";
+    public String testFallback() {
+        return "xxx";
+    }
+
+    @GetMapping("/test1")
+    public String test1() {
+        return ">>>>>>>>";
     }
 
 
+    @GetMapping("/test2")
+    @SentinelResource(value = "test.hello")
+    public String test2(){
+        return ">>>>>>>>";
+    }
 }

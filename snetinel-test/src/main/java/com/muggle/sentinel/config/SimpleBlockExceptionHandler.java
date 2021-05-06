@@ -1,4 +1,4 @@
-package com.muggle.snetinel.config;
+package com.muggle.sentinel.config;
 
 import com.alibaba.csp.sentinel.adapter.spring.webmvc.callback.BlockExceptionHandler;
 import com.alibaba.csp.sentinel.slots.block.BlockException;

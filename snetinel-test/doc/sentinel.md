@@ -98,7 +98,6 @@ public class TestController {
 
 第一种，加降级方法
 
-第二种，加sentinel 异常处理器
 
 第三种，加`BlockException`异常处理器：
 
@@ -106,6 +105,20 @@ public class TestController {
 ## 对所有controller 层做流控
 
 ## 接入控制台
+
+## 流量控制
+
+## 降级规则
+
+## 热点规则
+
+## 系统规则
+
+## 授权规则
+
+## 持久化
+
+## 
 
 ## 结语
 

@@ -38,6 +38,14 @@
             <artifactId>sentinel-transport-simple-http</artifactId>
             <version>1.8.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-parameter-flow-control</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-spring-webmvc-adapter</artifactId>
