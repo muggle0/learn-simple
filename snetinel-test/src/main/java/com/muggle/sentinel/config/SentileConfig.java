@@ -2,6 +2,8 @@ package com.muggle.sentinel.config;
 
 import com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +37,10 @@ public class SentileConfig {
         // 每秒调用最大次数为 1 次
         rule1.setCount(1);
         List<FlowRule> rules = new ArrayList<>();
+//        DegradeRuleManager.loadRules(List< DegradeRule > rules); // 修改降级规则
         rules.add(rule1);
         // 将控制规则载入到 Sentinel
+//        AuthorityRuleManager
         FlowRuleManager.loadRules(rules);
     }
 }

@@ -94,17 +94,55 @@ public class TestController {
 
 ```
 同样通过浏览器访问这个接口并不断刷新，会发现会频率过快的时候会返回 springboot 的错误页面，这是因为当aop切面会抛出 `BlockException`，当没有对应的
-异常处理器的时候springboot就会返回默认错误页面。这个时候我们有三种方式处理我们超出访问频率的时候的逻辑。
+异常处理器的时候springboot就会返回默认错误页面。这个时候我们有两种方式处理我们超出访问频率的时候的逻辑。
 
-第一种，加降级方法
+第一种，加降级方法：
+
+```java
+ @GetMapping("/test")
+    @SentinelResource(value = "test.hello",fallback = "testFallback")
+    public String test(){
+        return "success";
+    }
+
+    @GetMapping("/test0")
+    public String testFallback() {
+        return "xxx";
+    }
+
+```
 
 
-第三种，加`BlockException`异常处理器：
+
+第二种，加`BlockException`异常处理器：
+
+```java
+
+@ControllerAdvice
+public class ExceptionHandlerConfig {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @ExceptionHandler(BlockException.class)
+    @ResponseBody
+    public ResultWrapper sentinelBlockHandler(BlockException e) {
+        logger.warn("Blocked by Sentinel: {}", e.getRule());
+        // Return the customized result.
+        return "error";
+    }
+}
+
+```
 
 
 ## 对所有controller 层做流控
 
+
+
+
 ## 接入控制台
+
+sentinel 提供了一个可视化的控制台应用 `sentinel-dashboard`，
 
 ## 流量控制
 
