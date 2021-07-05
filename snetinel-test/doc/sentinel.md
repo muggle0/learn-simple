@@ -173,13 +173,25 @@ public class SimpleBlockExceptionHandler implements BlockExceptionHandler {
     }
 }
 ```
-`SentinelWebMvcConfig` 是流控配置类，在这里说明一下其一些配置的意义;
-
-
-
-
+`SentinelWebMvcConfig` 是流控配置类，通过其属性命名就不难猜出其作用 `isHttpMethodSpecify` 是否区分请求方式；
+`isWebContextUnify`是否使用统一web上下文； `UrlCleaner` 是url清理器，作用是对url进行整理
 
 ## 接入控制台
+`sentinel` 为我们提供了一个控制台应用，通过这个控制台我们可以直观的看到流控数据，动态的修改流控规则，下面让我们看看如何接入控制台。
+
+首先引入依赖：
+
+然后添加配置，
+
+再去 sen
+
+sentinel 官方还提供了 springcloud 的包，可以让我们很方便的在 spring cloud 项目中使用sentinel，这里在后文再做介绍，
+接下来我们会学习 sentinel 的流控算法和使用方式。
+
+
+
+
+
 
 sentinel 提供了一个可视化的控制台应用 `sentinel-dashboard`，
 
