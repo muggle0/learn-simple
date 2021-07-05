@@ -105,15 +105,12 @@ public class TestController {
     public String test(){
         return "success";
     }
-
-    @GetMapping("/test0")
+    
     public String testFallback() {
         return "xxx";
     }
 
 ```
-
-
 
 第二种，加`BlockException`异常处理器：
 
@@ -137,6 +134,47 @@ public class ExceptionHandlerConfig {
 
 
 ## 对所有controller 层做流控
+`sentinel` 还提供了 spring-mvc 的拦截器，配置该拦截器你可以对你项目的所有所有请求进行流控管理，首先我们需要引入依赖：
+```xml
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-spring-webmvc-adapter</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+```
+
+然后注入一个sentinel 的拦截器：
+```java
+@Configuration
+public class SimpleWebmvcConfig implements WebMvcConfigurer {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 注冊sentinel 拦截器
+        SentinelWebMvcConfig config = new SentinelWebMvcConfig();
+        config.setHttpMethodSpecify(true);
+        config.setWebContextUnify(true);
+        config.setBlockExceptionHandler(new SimpleBlockExceptionHandler());
+        registry.addInterceptor(new SentinelWebInterceptor(config)).addPathPatterns("/**");
+    }
+}
+```
+
+代码中 `SimpleBlockExceptionHandler` 是自定义流控异常处理器，作用是处理流控异常 `BlockException` 源码如下：
+```java
+
+public class SimpleBlockExceptionHandler implements BlockExceptionHandler {
+    @Override
+    public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, BlockException e) throws Exception {
+        httpServletResponse.setContentType("application/json");
+        PrintWriter out = httpServletResponse.getWriter();
+        out.print("{\"code\":500}");
+        out.flush();
+        out.close();
+    }
+}
+```
+`SentinelWebMvcConfig` 是流控配置类，在这里说明一下其一些配置的意义;
+
 
 
 
