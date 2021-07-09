@@ -181,19 +181,34 @@ public class SimpleBlockExceptionHandler implements BlockExceptionHandler {
 
 首先引入依赖：
 
-然后添加配置，
+```xml
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-transport-simple-http</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+```
 
-再去 sen
+这个依赖sentinel连接 控制端的通讯包。
 
-sentinel 官方还提供了 springcloud 的包，可以让我们很方便的在 spring cloud 项目中使用sentinel，这里在后文再做介绍，
-接下来我们会学习 sentinel 的流控算法和使用方式。
+然后添加配置：
+```properties
+csp.sentinel.dashboard.server=localhost:8080
+```
 
+注意，因为这个配置项不是属于 springboot的 所以不能添加在application中，要通过 -D 的方式在jvm启动的时候添加这个配置项。
 
+再去 [sentinel的github](https://github.com/alibaba/Sentinel/releases) 下载 控制台jar包 ，启动该jar包；访问8080 端口，
+登录账号密码和密码都是 sentinel。这个控制台实际上是一个springboot应用，启动端口和账号密码都可以通过application 修改。
+接下来，启动我们自己的应用，并访问一些接口，我们就能再界面上看到监控数据：
+![sentinel-dashboard](sentinel-1.jpg)
 
+通过控制台我们可以监控流量，管理流控降级等规则，这些规则都是存储在我们程序应用的内存中的，因此我们还需要学会这些规则的配置使用及其持久化。
 
+sentinel 官方还提供了 springcloud 的包，可以让我们很方便的在 spring cloud 项目中使用sentinel，springcloud 中使用 sentinel和 springboot
+中使用sentinel方式差不多，只是多了一个链路调用；因此我们要先学会了如何在 springboot中使用它。
 
-
-sentinel 提供了一个可视化的控制台应用 `sentinel-dashboard`，
+# sentinel 
 
 ## 流量控制
 
