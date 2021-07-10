@@ -208,7 +208,12 @@ csp.sentinel.dashboard.server=localhost:8080
 sentinel 官方还提供了 springcloud 的包，可以让我们很方便的在 spring cloud 项目中使用sentinel，springcloud 中使用 sentinel和 springboot
 中使用sentinel方式差不多，只是多了一个链路调用；因此我们要先学会了如何在 springboot中使用它。
 
-# sentinel 
+# sentinel 实战
+
+## 流控规则持久化
+
+我们之前配置的流控规则都是存储在应用的内存中的，这种方式明显无法满足我们实际开发的需求，一旦项目被重启，流控规则就被初始化了，需要我们再次去重新配置。
+
 
 ## 流量控制
 
