@@ -39,7 +39,7 @@ public class SentileConfig {
 }
 ```
 
-然后创建 `ccontroller` 并定义资源：
+然后创建 `controller` 并定义资源：
 
 ```java
 
@@ -208,6 +208,8 @@ csp.sentinel.dashboard.server=localhost:8080
 sentinel 官方还提供了 springcloud 的包，可以让我们很方便的在 spring cloud 项目中使用sentinel，springcloud 中使用 sentinel和 springboot
 中使用sentinel方式差不多，只是多了一个链路调用；因此我们要先学会了如何在 springboot中使用它。
 
+
+
 # sentinel 
 
 ## 流量控制
@@ -221,6 +223,37 @@ sentinel 官方还提供了 springcloud 的包，可以让我们很方便的在 
 ## 授权规则
 
 ## 持久化
+
+关于 sentinel 持久化 在官方资料 [https://github.com/alibaba/Sentinel/wiki/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%99%E6%89%A9%E5%B1%95](动态规则)中有介绍，
+
+应用流控规则的更新有三种方式——推模式，拉模式，api推送，推模式是使用 zk redis nacos 等具有监听功能的中间件来将更新后的规则推送到应用中去，而拉模式则需要
+应用主动去数据源中拉取规则，因此推模式更具有时效性。sentinal 官方提供的数据源整合依赖包括 consul redis Apollo eureka redis spring-cloud-config
+zookeeper 。
+对于数据源的整合，sentinel的扩展性是很强的，最坏的情况也是使用api去调用接口对规则的管理，这种情况需要使用者完全独立的开发一个规则管理应用出来。
+
+
+整合数据源的推模式（这也是使用场景最多的）核心依赖是
+
+```xml
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-extension</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+```
+
+官方提供的数据源整合依赖都是在这个依赖的基础上开发的。接下来我们就已redis做为数据源，以`sentinel-datasource-extension` 作为基础依赖开发一个
+sentinel的数据源整合依赖。
+
+## 核心类说明
+
+实现拉模式的数据源最简单的方式是继承 AutoRefreshDataSource 抽象类，然后实现 readSource() 方法，在该方法里从指定数据源读取字符串格式的配置数据。
+
+实现推模式的数据源最简单的方式是继承 AbstractDataSource 抽象类，在其构造方法中添加监听器，并实现 readSource() 从指定数据源读取字符串格式的配置数据。
+
+我们
+
+
 
 ## 
 
