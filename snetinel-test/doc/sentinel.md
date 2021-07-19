@@ -219,14 +219,33 @@ sentinel 官方还提供了 springcloud 的包，可以让我们很方便的在 
 
 我们之前配置的流控规则都是存储在应用的内存中的，这种方式明显无法满足我们实际开发的需求，一旦项目被重启，流控规则就被初始化了，需要我们再次去重新配置，因此规则的持久化就显得很有必要了。
 
-
-本文将会介绍几类典型的持久化方式
+本节会介绍几类主流持久化方式并对自定义持久化做介绍
 
 ### 文件持久化
 
-这种持久化方式限制比较大，只能在
+文件持久化是通过 sentinel spi 扩展点来加载本地文件中的持久化数据到内存中，它依赖接口 `InitFunc`，对于非spring项目这种方式可以很便捷的实现
+文件持久化。
+
+实现文件持久化首先要自定义一个类并实现`InitFunc` 接口：
+
+
+https://cloud.tencent.com/developer/article/1340592
+
+https://www.itmuch.com/spring-cloud-alibaba/sentinel-rules-persistence-pull-mode/
+
+
+这种持久化方式限制比较大
+
+优点
+简单易懂
+没有多余依赖（比如配置中心、缓存等）
+缺点
+由于规则是用 FileRefreshableDataSource 定时更新的，所以规则更新会有延迟。如果FileRefreshableDataSource定时时间过大，可能长时间延迟；如果FileRefreshableDataSource过小，又会影响性能；
+规则存储在本地文件，如果有一天需要迁移微服务，那么需要把规则文件一起迁移，否则规则会丢失。
 
 ### nacos 持久化
+
+
 
 ### redis 持久化
 
