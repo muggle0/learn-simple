@@ -228,20 +228,105 @@ sentinel 官方还提供了 springcloud 的包，可以让我们很方便的在 
 
 实现文件持久化首先要自定义一个类并实现`InitFunc` 接口：
 
+```java
 
-https://cloud.tencent.com/developer/article/1340592
+public class MyflieInitFunc implements InitFunc {
+    @Override
+    public void init() throws Exception {
+        URL resource = MyflieInitFunc.class.getClassLoader().getResource("");
+        File file = new File(resource.getPath()+"/config/flow.json");
+        File fileParent = file.getParentFile();
+        if(!fileParent.exists()){
+            fileParent.mkdirs();
+        }
+        if (!file.exists()){
+            file.createNewFile();
+        }
+        ReadableDataSource<String, List<FlowRule>> flowReadDataSource = new FileRefreshableDataSource<>(
+            resource.getPath()+"/config/flow.json",
+            source -> JSON.parseObject(
+                source,
+                new TypeReference<List<FlowRule>>() {
+                }
+            ));
+        FlowRuleManager.register2Property(flowReadDataSource.getProperty());
+        WritableDataSource<List<FlowRule>> flowWriteDataSource = new FileWritableDataSource<>(
+            resource.getPath()+"/config/flow.json",
+            t->JSON.toJSONString(t)
+        );
+        WritableDataSourceRegistry.registerFlowDataSource(flowWriteDataSource);
+    }
+}
+```
 
-https://www.itmuch.com/spring-cloud-alibaba/sentinel-rules-persistence-pull-mode/
+然后在resources 文件夹下新建文件 `META-INF\services\com.alibaba.csp.sentinel.init.InitFunc` 
+内容为`MyflieInitFunc` 的类路径：
+```properties
+com.muggle.sentinel.config.MyflieInitFunc
+```
+
+完成以上步骤后，文件持久化的方式就配置完成了。
+
+`InitFunc` 的资源初始化方法 `init()` 并不是在项目启动的时候调用的，而是在首次产生流控数据的时候调用的，
+也就是说它是一个懒加载的方法。
+在文件持久化配置中，`FileRefreshableDataSource` , `FileWritableDataSource` , `FlowRuleManager` 这三个类是有必要去熟识的。
+
+- FlowRuleManager 流控规则管理器，用于对流控规则的加载和管理，每类规则都有对应的管理器，后文会介绍。
+- FileRefreshableDataSource 流控规则读取及刷新的类，该类配置到sentinel中后会定时拉取流控文件中的流控规则
+- FileWritableDataSource 流控规则写入类，当我们在控制台编辑新的流控规则后，控制台会将规则推送给应用，应用接收到推送的规则后，
+会通过该类将数据写入流控文件中
+
+### `FlowRuleManager` 源码分析
+
+```java
+
+public class FlowRuleManager {
+    private static final AtomicReference<Map<String, List<FlowRule>>> flowRules = new AtomicReference();
+    private static final FlowRuleManager.FlowPropertyListener LISTENER = new FlowRuleManager.FlowPropertyListener();
+    private static SentinelProperty<List<FlowRule>> currentProperty = new DynamicSentinelProperty();
+    private static final ScheduledExecutorService SCHEDULER = Executors.newScheduledThreadPool(1, new NamedThreadFactory("sentinel-metrics-record-task", true));
+     
+    public static List<FlowRule> getRules() {
+       
+        List<FlowRule> rules = new ArrayList();
+        Iterator var1 = ((Map)flowRules.get()).entrySet().iterator();
+
+        while(var1.hasNext()) {
+            Entry<String, List<FlowRule>> entry = (Entry)var1.next();
+            rules.addAll((Collection)entry.getValue());
+        }
+
+        return rules;
+    }
+    
+    public static void loadRules(List<FlowRule> rules){
+         currentProperty.updateValue(rules);
+    }
+    
+     public static boolean hasConfig(String resource) {
+         return ((Map)flowRules.get()).containsKey(resource);
+    }
+}
+```
+该类的静态属性包括 流控规则数组 `flowRules` ，用于监控流控规则更新的监听器`LISTENER` , 轮询监听流控配置的线程池`SCHEDULER`,sentinel 配置类`currentProperty`.
+而它几个api也很明了，就是对流控规则的增删改查。
+
+### `FileRefreshableDataSource` 源码分析
+
+`FileRefreshableDataSource` 继承了`AutoRefreshDataSource`,而`AutoRefreshDataSource` 
+
+### `FileWritableDataSource` 源码分析
 
 
-这种持久化方式限制比较大
+通过分析我们知道，这种持久化方式是一种拉模式，胜在配置简单，不需要外部数据源就能完成流控数据的持久化。由于规则是用 FileRefreshableDataSource 定时更新的，所以规则更新会有延迟。
+如果FileRefreshableDataSource定时时间过大，可能长时间延迟；如果FileRefreshableDataSource过小，又会影响性能；
+因为规则存储在本地文件，如果需要迁移微服务，那么需要把规则文件一起迁移，否则规则会丢失。
 
 优点
 简单易懂
 没有多余依赖（比如配置中心、缓存等）
 缺点
-由于规则是用 FileRefreshableDataSource 定时更新的，所以规则更新会有延迟。如果FileRefreshableDataSource定时时间过大，可能长时间延迟；如果FileRefreshableDataSource过小，又会影响性能；
-规则存储在本地文件，如果有一天需要迁移微服务，那么需要把规则文件一起迁移，否则规则会丢失。
+
 
 ### nacos 持久化
 

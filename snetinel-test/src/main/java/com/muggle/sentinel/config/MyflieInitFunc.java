@@ -9,12 +9,15 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.csp.sentinel.transport.util.WritableDataSourceRegistry;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MyflieInitFunc implements InitFunc {
@@ -45,5 +48,12 @@ public class MyflieInitFunc implements InitFunc {
     }
 
 
+/*
+*
+*
+https://cloud.tencent.com/developer/article/1340592
+
+https://www.itmuch.com/spring-cloud-alibaba/sentinel-rules-persistence-pull-mode/
+* */
 
 }
