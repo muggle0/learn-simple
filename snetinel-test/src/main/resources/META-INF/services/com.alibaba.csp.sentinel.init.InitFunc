@@ -1,0 +1,2 @@
+# 改成上面FileDataSourceInit的包名类名全路径即可。
+com.muggle.sentinel.config.MyflieInitFunc
