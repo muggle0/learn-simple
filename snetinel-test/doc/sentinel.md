@@ -500,9 +500,11 @@ remoteAddress 是nacos 的地址； groupId和dataId均为nacos配置中心的�
 
 因为文件持久化分析了一部分源码，因此这里不会对源码分析太多，只简单的介绍它是如何去读取到配置的。
 
+
 ```java
 
 public class NacosDataSource<T> extends AbstractDataSource<String, T> {
+
     private static final int DEFAULT_TIMEOUT = 3000;
     private final ExecutorService pool;
     private final Listener configListener;
@@ -511,7 +513,49 @@ public class NacosDataSource<T> extends AbstractDataSource<String, T> {
     private final Properties properties;
     private ConfigService configService;
 
+    public NacosDataSource(final Properties properties, final String groupId, final String dataId, Converter<String, T> parser) {
+        super(parser);
+        this.pool = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue(1), new NamedThreadFactory("sentinel-nacos-ds-update"), new DiscardOldestPolicy());
+        this.configService = null;
+        if (!StringUtil.isBlank(groupId) && !StringUtil.isBlank(dataId)) {
+            AssertUtil.notNull(properties, "Nacos properties must not be null, you could put some keys from PropertyKeyConst");
+            this.groupId = groupId;
+            this.dataId = dataId;
+            this.properties = properties;
+            this.configListener = new Listener() {
+                public Executor getExecutor() {
+                    return NacosDataSource.this.pool;
+                }
+
+                public void receiveConfigInfo(String configInfo) {
+                    RecordLog.info("[NacosDataSource] New property value received for (properties: {}) (dataId: {}, groupId: {}): {}", new Object[]{properties, dataId, groupId, configInfo});
+                    T newValue = NacosDataSource.this.parser.convert(configInfo);
+                    NacosDataSource.this.getProperty().updateValue(newValue);
+                }
+            };
+            this.initNacosListener();
+            this.loadInitialConfig();
+        } else {
+            throw new IllegalArgumentException(String.format("Bad argument: groupId=[%s], dataId=[%s]", groupId, dataId));
+        }
+    }
+}
 ```
+我们看它的构造方法，创建了一个线程池，然后通过这个线程池 new 了一个nacos的Listener，Listener是一个监听器，initNacosListener() 方法是将监听器
+注册到 nacos的configService 里面，通过这个监听器去监听nacos的配置变化，当配置发生更新的时候，调用监听器的 `receiveConfigInfo` 方法：
+
+```java
+public void receiveConfigInfo(String configInfo) {
+    RecordLog.info("[NacosDataSource] New property value received for (properties: {}) (dataId: {}, groupId: {}): {}", new Object[]{properties, dataId, groupId, configInfo});
+    T newValue = NacosDataSource.this.parser.convert(configInfo);
+    NacosDataSource.this.getProperty().updateValue(newValue);
+}
+
+```
+
+前面分析文件持久话我们就分析过，配置最终要被更新到父类的`property` 属性里面，再这里我们也看到了同样的代码。
+
+# sentinel 规则配置及使用
 
 sentinel 增加规则的方式 包括三种，数据源加载，代码加载，控制台加载；每一类流控规则我都会从这三个方面去说明如何使用。
 
