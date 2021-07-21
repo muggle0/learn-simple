@@ -313,27 +313,144 @@ public class FlowRuleManager {
 
 ### `FileRefreshableDataSource` 源码分析
 
-`FileRefreshableDataSource` 继承了`AutoRefreshDataSource`,而`AutoRefreshDataSource` 
+`FileRefreshableDataSource` 继承了`AutoRefreshDataSource`,而`AutoRefreshDataSource` 中有一个线程池 `service` 用于拉取 文件中存储的规则
+以及拉取间隔 `recommendRefreshMs` .
+：
+
+```java
+
+public abstract class AutoRefreshDataSource<S, T> extends AbstractDataSource<S, T> {
+    private ScheduledExecutorService service;
+    protected long recommendRefreshMs = 3000L;
+
+    public AutoRefreshDataSource(Converter<S, T> configParser) {
+        super(configParser);
+        this.startTimerService();
+    }
+......
+}
+``` 
+
+我们可以看一下 `FileRefreshableDataSource` 构造函数：
+
+```java
+
+ public FileRefreshableDataSource(File file, Converter<String, T> configParser) throws FileNotFoundException {
+        this(file, configParser, 3000L, 1048576, DEFAULT_CHAR_SET);
+    }
+
+    public FileRefreshableDataSource(String fileName, Converter<String, T> configParser) throws FileNotFoundException {
+        this(new File(fileName), configParser, 3000L, 1048576, DEFAULT_CHAR_SET);
+    }
+
+    public FileRefreshableDataSource(File file, Converter<String, T> configParser, int bufSize) throws FileNotFoundException {
+        this(file, configParser, 3000L, bufSize, DEFAULT_CHAR_SET);
+    }
+
+    public FileRefreshableDataSource(File file, Converter<String, T> configParser, Charset charset) throws FileNotFoundException {
+        this(file, configParser, 3000L, 1048576, charset);
+    }
+
+    public FileRefreshableDataSource(File file, Converter<String, T> configParser, long recommendRefreshMs, int bufSize, Charset charset) 
+```
+
+不难看出，如果在 new `FileRefreshableDataSource` 时不指定刷新间隔就取默认值 3000 毫秒。
 
 ### `FileWritableDataSource` 源码分析
 
+```java
+
+public class FileWritableDataSource<T> implements WritableDataSource<T> {
+    private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    private final Converter<T, String> configEncoder;
+    private final File file;
+    private final Charset charset;
+    private final Lock lock;
+    
+    public void write(T value) throws Exception {
+        this.lock.lock();
+        try {
+            String convertResult = (String)this.configEncoder.convert(value);
+            FileOutputStream outputStream = null;
+
+            try {
+                outputStream = new FileOutputStream(this.file);
+                byte[] bytesArray = convertResult.getBytes(this.charset);
+                RecordLog.info("[FileWritableDataSource] Writing to file {}: {}", new Object[]{this.file, convertResult});
+                outputStream.write(bytesArray);
+                outputStream.flush();
+            } finally {
+                if (outputStream != null) {
+                    try {
+                        outputStream.close();
+                    } catch (Exception var16) {
+                    }
+                }
+
+            }
+        } finally {
+            this.lock.unlock();
+        }
+    }
+}
+
+```
+代码结构也很了然，一个数据转换器，一个 file 一个lock ,当框架调用 `write` 方法时上锁并往 file中写配置。
+
+分析得差不多了，让我们看看实战效果吧；
+
+首先启动项目和控制台，然后在控制台上配置一个流控规则，可以观察到项目规则存储文件中多了点内容：
+![](sentinel2.jpg)
+
+```json
+[{"clusterConfig":{"acquireRefuseStrategy":0,"clientOfflineTime":2000,"fallbackToLocalWhenFail":true,"resourceTimeout":2000,"resourceTimeoutStrategy":0,"sampleCount":10,"strategy":0,"thresholdType":0,"windowIntervalMs":1000},"clusterMode":false,"controlBehavior":0,"count":1.0,"grade":1,"limitApp":"default","maxQueueingTimeMs":500,"resource":"test","strategy":0,"warmUpPeriodSec":10}]
+```
+
+我们重启项目和控制台规则也不会丢失，规则持久化生效。
 
 通过分析我们知道，这种持久化方式是一种拉模式，胜在配置简单，不需要外部数据源就能完成流控数据的持久化。由于规则是用 FileRefreshableDataSource 定时更新的，所以规则更新会有延迟。
 如果FileRefreshableDataSource定时时间过大，可能长时间延迟；如果FileRefreshableDataSource过小，又会影响性能；
 因为规则存储在本地文件，如果需要迁移微服务，那么需要把规则文件一起迁移，否则规则会丢失。
 
-优点
-简单易懂
-没有多余依赖（比如配置中心、缓存等）
-缺点
+文件持久化能应付我们需求的大部分场景，但对于微服务而言是不那么满足要求的；
+因为文件持久化就必定要求我们在服务器上提供一个用于存储配置文件的文件夹，而微服务项目大部分情况是容器部署，这就让文件持久化显得不那么好用了。
 
+为此，官方提供了自定义的持久化maven依赖：
+```xml
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-extension</artifactId>
+        </dependency>
 
-### nacos 持久化
+```
+以及在这个依赖的基础上开发的以CONSUL NACOS REDIS 作为数据源的maven 依赖：
 
+```xml
+        <dependency>
+            <artifactId>sentinel-datasource-consul</artifactId>
+            <groupId>com.alibaba.csp</groupId>
+        </dependency>
+        <dependency>
+            <artifactId>sentinel-datasource-redis</artifactId>
+            <groupId>com.alibaba.csp</groupId>
+        </dependency>
 
+        <dependency>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+            <groupId>com.alibaba.csp</groupId>
+        </dependency>
 
+```
 ### redis 持久化
+以上三种种持久化不同于文件持久化，它们是推模式的，而且迁移部署起来更为方便，符合微服务的特性。接下来我们就以nacos持久化为例来学习一下这种方式是怎么配置的。
 
+首先引入依赖
+
+```java
+ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new NacosDataSource<>(remoteAddress, groupId, dataId,
+    source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {}));
+FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
+```
 
 sentinel 增加规则的方式 包括三种，数据源加载，代码加载，控制台加载；每一类流控规则我都会从这三个方面去说明如何使用。
 

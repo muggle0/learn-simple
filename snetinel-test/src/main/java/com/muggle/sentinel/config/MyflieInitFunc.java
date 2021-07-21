@@ -50,10 +50,9 @@ public class MyflieInitFunc implements InitFunc {
 
 /*
 *
+* https://cloud.tencent.com/developer/article/1340592
+* https://www.itmuch.com/spring-cloud-alibaba/sentinel-rules-persistence-pull-mode/
 *
-https://cloud.tencent.com/developer/article/1340592
-
-https://www.itmuch.com/spring-cloud-alibaba/sentinel-rules-persistence-pull-mode/
 * */
 
 }
