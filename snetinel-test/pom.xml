@@ -41,7 +41,7 @@
 
 
         <dependency>
-            <artifactId>sentinel-datasource-redis</artifactId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
             <groupId>com.alibaba.csp</groupId>
             <version>1.8.1</version>
         </dependency>

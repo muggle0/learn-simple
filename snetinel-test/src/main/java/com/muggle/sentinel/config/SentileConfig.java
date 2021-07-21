@@ -3,15 +3,14 @@ package com.muggle.sentinel.config;
 import com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
-import com.alibaba.csp.sentinel.datasource.redis.config.RedisConnectionConfig;
+import com.alibaba.csp.sentinel.datasource.nacos.NacosDataSource;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
-import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.pubsub.api.sync.RedisPubSubCommands;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,8 +28,7 @@ import java.util.List;
 @Configuration
 public class SentileConfig {
 
-    @Autowired
-    RedisConnectionConfig redisConnectionConfig;
+
 
 
     @Bean
@@ -53,18 +51,11 @@ public class SentileConfig {
 //        AuthorityRuleManager
         FlowRuleManager.loadRules(rules);
 
-        ReadableDataSource<String, List<FlowRule>> redisDataSource = new RedisDataSource<List<FlowRule>>(redisConnectionConfig, ruleKey, channel, flowConfigParser);
-        FlowRuleManager.register2Property(redisDataSource.getProperty());
+        ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new NacosDataSource<>(remoteAddress, groupId, dataId,
+            source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
+            }));
+        FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
     }
 
-    public <T> void pushRules(List<T> rules, Converter<List<T>, String> encoder) {
 
-        StatefulRedisPubSubConnection<String, String> connection = client.connectPubSub();
-        RedisPubSubCommands<String, String> subCommands = connection.sync();
-        String value = encoder.convert(rules);
-        subCommands.multi();
-        subCommands.set(ruleKey, value);
-        subCommands.publish(ruleChannel, value);
-        subCommands.exec();
-    }
 }

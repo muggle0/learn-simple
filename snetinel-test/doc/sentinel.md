@@ -328,9 +328,36 @@ public abstract class AutoRefreshDataSource<S, T> extends AbstractDataSource<S, 
         this.startTimerService();
     }
 ......
+     private void startTimerService() {
+            this.service = Executors.newScheduledThreadPool(1, new NamedThreadFactory("sentinel-datasource-auto-refresh-task", true));
+            this.service.scheduleAtFixedRate(new Runnable() {
+                public void run() {
+                    try {
+                        if (!AutoRefreshDataSource.this.isModified()) {
+                            return;
+                        }
+    
+                        T newValue = AutoRefreshDataSource.this.loadConfig();
+                        AutoRefreshDataSource.this.getProperty().updateValue(newValue);
+                    } catch (Throwable var2) {
+                        RecordLog.info("loadConfig exception", var2);
+                    }
+    
+                }
+            }, this.recommendRefreshMs, this.recommendRefreshMs, TimeUnit.MILLISECONDS);
+        }
+
 }
 ``` 
+我们重点关注 `startTimerService` 这个方法,这个方法是在构造器里面调用的，也就是说当你new 一个 `FileRefreshableDataSource` 时就会调用该方法
 
+该方法就是通过线程池定时调用`isModified` 方法判断配置是否更新过，如果更新了就同步更新到父类属性 `SentinelProperty` 中，代码对应:
+
+```java
+ AutoRefreshDataSource.this.getProperty().updateValue(newValue)
+```
+不难判读出，父类抽象类的`property` 属性才是真正的获取规则提供拦截判断的关键属性。后文也会用到这个知识点，这里记一下。
+ 
 我们可以看一下 `FileRefreshableDataSource` 构造函数：
 
 ```java
@@ -444,12 +471,46 @@ public class FileWritableDataSource<T> implements WritableDataSource<T> {
 ### redis 持久化
 以上三种种持久化不同于文件持久化，它们是推模式的，而且迁移部署起来更为方便，符合微服务的特性。接下来我们就以nacos持久化为例来学习一下这种方式是怎么配置的。
 
-首先引入依赖
+首先引入 nacos 相关依赖依赖：
+```xml
+
+        <dependency>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+            <groupId>com.alibaba.csp</groupId>
+        </dependency>
+```
+然后通过`FlowRuleManager` 注册数据源就ok了
+```java
+        ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new NacosDataSource<>(remoteAddress, groupId, dataId,
+            source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
+            }));
+        FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
+```
+remoteAddress 是nacos 的地址； groupId和dataId均为nacos配置中心的属性，在创建配置项的时候由使用者自定义，如图为在nacos创建配置项的截图：
+
+
+启动nacos，启动我们的项目和控制台，然后修改nacos中的配置项，就能再控制台上观测到规则变化，nacos中存储的规则也是json,我们可以把文件持久化教程中产生json
+复制进去，这里就不在赘述。
+
+这种模式是推模式，优点是这种方式有更好的实时性和一致性保证。因为我们和文件持久化比起来少注册了一个与`FileWritableDataSource` 对应的类，
+也就是说应用中更新的规则不能反写到nacos,只能通过nacos读取到配置；因此我们在控制台上修改的规则也不会持久化到nacos中。这样设计是合理的，因为nacos作为
+配置中心不应该允许应用去反写自己的配置。
+
+## 源码分析
+
+因为文件持久化分析了一部分源码，因此这里不会对源码分析太多，只简单的介绍它是如何去读取到配置的。
 
 ```java
-ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new NacosDataSource<>(remoteAddress, groupId, dataId,
-    source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {}));
-FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
+
+public class NacosDataSource<T> extends AbstractDataSource<String, T> {
+    private static final int DEFAULT_TIMEOUT = 3000;
+    private final ExecutorService pool;
+    private final Listener configListener;
+    private final String groupId;
+    private final String dataId;
+    private final Properties properties;
+    private ConfigService configService;
+
 ```
 
 sentinel 增加规则的方式 包括三种，数据源加载，代码加载，控制台加载；每一类流控规则我都会从这三个方面去说明如何使用。
