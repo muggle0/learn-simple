@@ -570,75 +570,75 @@ sentinel 增加规则的方式 包括三种，数据源加载，代码加载，�
 
 流量控制的相关概念：
 
-- resource：
-- count:
-- grade: 
-- limitApp
-- strategy:
-- controlBehavior:
+- resource：资源名称，资源可以是一个代码块或者方法
+- count: 限流阈值
+- grade: 限流阈值类型
+- limitApp: 流控针对的调用来源，若为default则不区划来源，在分布式系统中该参数有用
+- strategy: 限流策略
+- controlBehavior: 流控行为，包括直接拒绝，warm up ,排队等待。直接拒接就是超出阈值，直接拒绝后面的请求；warm up 是让系统预热一段时间，
+它的阈值并不是一开始就是设定值，会随着qps 或线程数的增加而慢慢提高到设定值；排队等待是请求过多时，让请求匀速的进入后台进行处理。采用漏斗算法，
+控制流量设置超时时间，超时的则将请求抛弃，返回错误信息
 
 流控规则代码方式配置示例：
 
+```java
+
+        FlowRule rule1 = new FlowRule();
+        rule1.setResource("test.hello");
+        rule1.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        // 每秒调用最大次数为 1 次
+        rule1.setCount(1);
+        List<FlowRule> rules = new ArrayList<>();
+        // 将控制规则载入到 Sentinel
+        FlowRuleManager.loadRules(rules);
+```
+
 流控规则控制台配置示例：
+
+![](sentinel2.jpg)
 
 流控规则数据源json示例：
 
 
+```json
+[{"clusterConfig":{"acquireRefuseStrategy":0,"clientOfflineTime":2000,"fallbackToLocalWhenFail":true,"resourceTimeout":2000,"resourceTimeoutStrategy":0,"sampleCount":10,"strategy":0,"thresholdType":0,"windowIntervalMs":1000},"clusterMode":false,"controlBehavior":0,"count":1.0,"grade":1,"limitApp":"default","maxQueueingTimeMs":500,"resource":"test","strategy":0,"warmUpPeriodSec":10}]
+```
 
 ## 降级规则
 
 降级熔断概念
 
-降级熔断和流量控制的区别
+熔断降级会在调用链路中当某个资源指数超出阈值时对这个资源的调用进行熔断，在熔断时间窗口内所有调用都快速失败调用降级方法，直到熔断恢复；
+降级熔断和流控规则的区别是在超出阈值后的时间窗内所有的调用都会被降级，直到熔断恢复。
 
+降级策略：
+
+熔断降级相关概念：
+
+
+降级熔断代码配置
 
 ## 热点规则
+
 热点规则的概念
 
 
 ## 系统规则
+
 系统规则的概念
 
 系统规则的特点
 
 ## 授权规则
 
+## sentinel核心类解析
+FlowSlot
 
-## 持久化
-
-关于 sentinel 持久化 在官方资料 [https://github.com/alibaba/Sentinel/wiki/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%99%E6%89%A9%E5%B1%95](动态规则)中有介绍，
-
-应用流控规则的更新有三种方式——推模式，拉模式，api推送，推模式是使用 zk redis nacos 等具有监听功能的中间件来将更新后的规则推送到应用中去，而拉模式则需要
-应用主动去数据源中拉取规则，因此推模式更具有时效性。sentinal 官方提供的数据源整合依赖包括 consul redis Apollo eureka redis spring-cloud-config
-zookeeper 。
-对于数据源的整合，sentinel的扩展性是很强的，最坏的情况也是使用api去调用接口对规则的管理，这种情况需要使用者完全独立的开发一个规则管理应用出来。
-
-
-整合数据源的推模式（这也是使用场景最多的）核心依赖是
-
-```xml
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-datasource-extension</artifactId>
-            <version>1.8.1</version>
-        </dependency>
-```
-
-官方提供的数据源整合依赖都是在这个依赖的基础上开发的。接下来我们就已redis做为数据源，以`sentinel-datasource-extension` 作为基础依赖开发一个
-sentinel的数据源整合依赖。
-
-## 核心类说明
-
-实现拉模式的数据源最简单的方式是继承 AutoRefreshDataSource 抽象类，然后实现 readSource() 方法，在该方法里从指定数据源读取字符串格式的配置数据。
-
-实现推模式的数据源最简单的方式是继承 AbstractDataSource 抽象类，在其构造方法中添加监听器，并实现 readSource() 从指定数据源读取字符串格式的配置数据。
-
-我们
-
+https://blog.csdn.net/guzhangyu12345/article/details/107490874
 
 
 ## 
-
+    
 ## 结语
 
 ## 

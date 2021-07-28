@@ -34,3 +34,7 @@ Eden 内存比例设置 -XX:suvivor retio=8
 jps
 
 jstate -gcutil 6666
+
+idea 提取快照 capture memory snapshot  
+
+https://blog.csdn.net/weixin_39732316/article/details/111252627?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0.control&spm=1001.2101.3001.4242
