@@ -1,13 +1,10 @@
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.ReturnType;
-import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.nio.charset.Charset;
 
 /**
  * Description
@@ -16,6 +13,9 @@ import java.nio.charset.Charset;
  */
 @RestController
 public class TestLuaController {
+    @Value("${test:false}")
+    private Boolean test;
+
     @Autowired
     private StringRedisTemplate redisTemplate;
 
@@ -48,6 +48,10 @@ public class TestLuaController {
             e.printStackTrace();
         }
         return "error";
+    }
+
+    public static void main(String[] args) {
+
     }
 
 }
