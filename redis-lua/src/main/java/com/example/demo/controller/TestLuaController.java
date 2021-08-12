@@ -50,8 +50,4 @@ public class TestLuaController {
         return "error";
     }
 
-    public static void main(String[] args) {
-
-    }
-
 }
