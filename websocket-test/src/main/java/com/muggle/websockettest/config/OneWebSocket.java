@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.websocket.MessageHandler;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by muggle
  */
 
-@ServerEndpoint(value = "/test/oneToOne")
+@ServerEndpoint(value = "/test")
 @Component
 public class OneWebSocket {
 
@@ -62,7 +63,7 @@ public class OneWebSocket {
     public void onMessage(String message, Session session) {
         log.info("服务端收到客户端[{}]的消息[{}]", session.getId(), message);
         try {
-           clients.forEach();
+            clients.values().forEach(session1 -> sendMessage(message,session1));
         } catch (Exception e) {
             log.error("解析失败：{}", e);
         }
