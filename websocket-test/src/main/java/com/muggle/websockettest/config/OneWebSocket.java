@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by muggle
  */
 
-@ServerEndpoint(value = "/test")
+@ServerEndpoint(value = "/ws")
 @Component
 public class OneWebSocket {
 
