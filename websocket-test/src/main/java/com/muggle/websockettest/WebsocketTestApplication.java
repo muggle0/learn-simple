@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 @SpringBootApplication
-@EnableWebSocket
 public class WebsocketTestApplication {
 
     public static void main(String[] args) {

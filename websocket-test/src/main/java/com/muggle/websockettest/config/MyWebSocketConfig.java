@@ -1,13 +1,9 @@
 package com.muggle.websockettest.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-
-import javax.annotation.Resource;
 
 /**
  * Description
@@ -23,7 +19,7 @@ public class MyWebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
 
-        webSocketHandlerRegistry.addHandler(new MyWebSocketHandler(),"/ws")
+        webSocketHandlerRegistry.addHandler(new MyWebSocketHandler(),"/**")
             //添加myHandler消息处理对象，和websocket访问地址
             //设置允许跨域访问
             .setAllowedOrigins("*")
