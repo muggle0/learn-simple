@@ -125,9 +125,12 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "test": ">>>",
-  "hard": ">>>"
+  "test": "a",
+  "hard": "b",
+  "key1": 4,
+  "status": 0
 }
+
 
 ###
 POST http://localhost:9200/learn/_doc/1993324
@@ -135,9 +138,10 @@ Authorization: {{Authorization}}
 Content-Type: application/json
 
 {
-  "test": ">>>",
-  "hard": ">>>",
-  "key1": 1
+  "test": "a",
+  "hard": "b",
+  "key1": 2,
+  "status": 0
 }
 
 ###
@@ -298,3 +302,218 @@ Content-Type: application/json
 }
 
 ### TYPE DOC field mapping shards replicas
+
+POST http://47.105.66.210:9200/article_v1/doc/_update_by_query
+Content-Type: application/json
+
+{
+    "script": {
+        "source":"ctx._source['status']=0;"
+    },
+    "query": {
+        "term": {
+            "userId": 1
+        }
+    }
+}
+
+###
+POST http://localhost:9200/test/_doc/_update_by_query
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "script": {
+    "lang": "painless",
+        "params": {
+      "authorityCode": "36811",
+          "test": "test"
+    },
+    "source": "List dataAuths = ((List) ctx._source.dataAuth); for (dataAuthItem in dataAuths) {List authGrops=((List)dataAuthItem.authorityGroup); authGrops.removeIf( item -> {item.authorityGroupCode == params.authorityCode;})}"
+  },
+
+  "query": {
+    "term": {
+      "userId": "694621126537510912"
+    }
+  }
+}
+
+###
+
+
+POST http://localhost:9200/test/_search
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_all": {
+          }
+        }
+      ]
+    }
+  }
+}
+
+###
+POST http://localhost:9200/test/_doc
+Authorization: {{Authorization}}
+Content-Type: application/json
+
+{
+  "userId": "694621126537510912",
+  "account": "qxadmin",
+  "userName": "权限管理员",
+  "roleId": "697484357358583808",
+  "roleName": "预算单位经办",
+  "appCode": "ysy_account_2021",
+  "regionCode": "440000000",
+  "orgId": "735150802196234240",
+  "orgName": "省委办公厅",
+  "orgCode": "440000000_Agency_101",
+  "orgAuth": [{
+    "orgClassCode": "Agency",
+    "orgClassName": "预算单位",
+    "authOrgs": [{
+      "orgId": 735150802196234240,
+      "orgCode": "440000000_Agency_101",
+      "eleValCode": "101",
+      "orgName": "省委办公厅",
+      "parentId": null,
+      "regionCode": "440000000",
+      "regionName": "广东省",
+      "sourceBid": "e84c0639051043b79464f26b44dc0664",
+      "sourceParentId": null,
+      "sourceEleValLevel": "1",
+      "sourceIsLeaf": "0",
+      "valIndex":"Agency:"
+    },
+      {
+        "orgId": 735150802196234241,
+        "orgCode": "440000000_Agency_101001",
+        "eleValCode": "101001",
+        "orgName": "中共广东省委办公厅",
+        "parentId": 735150802196234240,
+        "regionCode": "440000000",
+        "regionName": "广东省",
+        "sourceBid": "b5b96d12a0f74291875ec4e2c50c2c48",
+        "sourceParentId": "e84c0639051043b79464f26b44dc0664",
+        "sourceEleValLevel": "2",
+        "sourceIsLeaf": "1"
+      }
+    ]
+  }
+
+  ],
+  "dataAuth": [{
+    "billTypeCode": "1001001",
+    "billTypeName": "账户信息表",
+    "authorityGroup": [{
+      "authorityGroupCode": "36811",
+      "authorityGroupName": "159005",
+      "elementsList": [{
+        "bid": null,
+        "elementCode": "MofDiv",
+        "elementName": "财政区划代码",
+        "eleValList": [{
+          "bid": "856a3107188d4cfe941f640bzhcz2020",
+          "parentId": null,
+          "eleValCode": "101011",
+          "eleValName": "农业农村处",
+          "eleValLevel": 1,
+          "isLeaf": "1"
+        }, {
+          "bid": "de9fa9a3f67d45279fa48dee0097ed76",
+          "parentId": "bb1f4dc852124d95ada1a22c31935100",
+          "eleValCode": "445281000",
+          "eleValName": "普宁市",
+          "eleValLevel": 3,
+          "isLeaf": "1"
+        },
+          {
+            "bid": "9a20ed56822f4a2abcc8962bbcad3918",
+            "parentId": "4317b64397064889a3c1ce5d9cacd198",
+            "eleValCode": "441500000",
+            "eleValName": "汕尾市",
+            "eleValLevel": 2,
+            "isLeaf": "0"
+          }
+        ]
+      }]
+    }]
+  }, {
+    "billTypeCode": "0000001",
+    "billTypeName": "机构单据类型",
+    "authorityGroup": [{
+      "authorityGroupCode": "36811",
+      "authorityGroupName": "159005",
+      "elementsList": [{
+        "bid": null,
+        "elementCode": "MofDiv",
+        "elementName": "财政区划代码",
+        "eleValList": [{
+          "bid": "856a3107188d4cfe941f640bzhcz2020",
+          "parentId": null,
+          "eleValCode": "101011",
+          "eleValName": "农业农村处",
+          "eleValLevel": 1,
+          "isLeaf": "1"
+        }]
+      }]
+    }, {
+      "authorityGroupCode": "36812",
+      "authorityGroupName": "159003",
+      "elementsList": [{
+        "bid": null,
+        "elementCode": "MofDiv",
+        "elementName": "财政区划代码",
+        "eleValList": [{
+          "bid": "856a3107188d4cfe941f640bzhcz2020",
+          "parentId": null,
+          "eleValCode": "101011",
+          "eleValName": "农业农村处",
+          "eleValLevel": 1,
+          "isLeaf": "1"
+        }, {
+          "bid": "835429eae465452dab201c04zhcz2020",
+          "parentId": null,
+          "eleValCode": "101072",
+          "eleValName": "税政处",
+          "eleValLevel": 1,
+          "isLeaf": "1"
+        }]
+      }]
+    }, {
+      "authorityGroupCode": "36814",
+      "authorityGroupName": "159005",
+      "elementsList": [{
+        "bid": null,
+        "elementCode": "Agency",
+        "elementName": "预算单位",
+        "eleValList": [{
+          "bid": "5bb7ab1a6fd144a4a914c5822531038a",
+          "parentId": "04fc4a7c347e4503ad9c5fce53f772f8",
+          "eleValCode": "440113002",
+          "eleValName": "沙湾镇",
+          "eleValLevel": 3,
+          "isLeaf": "1"
+        },
+          {
+            "bid": "b150bd01e3394ddab7f966f8c5db0410",
+            "parentId": "04fc4a7c347e4503ad9c5fce53f772f8",
+            "eleValCode": "440113006",
+            "eleValName": "新造镇",
+            "eleValLevel": 3,
+            "isLeaf": "1"
+          }
+        ]
+      }]
+    }]
+  }]
+}
+
+###
