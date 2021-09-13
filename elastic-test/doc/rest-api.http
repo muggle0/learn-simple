@@ -318,7 +318,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:9200/test/_doc/_update_by_query
+POST http://localhost:9200/auth/_doc/_update_by_query
 Authorization: {{Authorization}}
 Content-Type: application/json
 
@@ -326,15 +326,16 @@ Content-Type: application/json
   "script": {
     "lang": "painless",
         "params": {
-      "authorityCode": "36811",
-          "test": "test"
+      "result": {"authorityGroupCode":"23232323","authorityGroupName":"test234324324","elementsList":[{"eleValList":[{"bid":"ffc3d0a5bf254f9198a67015de7e0f94","eleValCode":"101","eleValLevel":1,"eleValName":"省委办公厅","isLeaf":"1","valIndex":"0000001:Supdep:101"},{"bid":"7299e394ea86469593f1bbc03bca705c","eleValCode":"102","eleValLevel":1,"eleValName":"省人大常委会办公厅","isLeaf":"1","valIndex":"0000001:Supdep:102"}],"elementCode":"Supdep","elementName":"部门标识"},{"eleValList":[{"bid":"96520f7072424171813de05870fada42","eleValCode":"104003","eleValLevel":2,"eleValName":"广东省投资和信用服务中心","isLeaf":"1","parentId":"96a293df1cb542dbb58ecf30d9826cfa","valIndex":"0000001:Agency:104003"},{"bid":"cf45d58f7cf247e2b1f8af9badab7c01","eleValCode":"101002","eleValLevel":2,"eleValName":"中共广东省委机关幼儿院","isLeaf":"1","parentId":"e84c0639051043b79464f26b44dc0664","valIndex":"0000001:Agency:101002"},{"bid":"96a293df1cb542dbb58ecf30d9826cfa","eleValCode":"104","eleValLevel":1,"eleValName":"省发展改革委","isLeaf":"0","valIndex":"0000001:Agency:104"},{"bid":"e84c0639051043b79464f26b44dc0664","eleValCode":"101","eleValLevel":1,"eleValName":"省委办公厅","isLeaf":"0","valIndex":"0000001:Agency:101"}],"elementCode":"Agency","elementName":"预算单位"},{"eleValList":[{"bid":"20b9bb4983e64eb0af2de50b61c62cd3","eleValCode":"101007","eleValLevel":1,"eleValName":"综合处","isLeaf":"1","parentId":"","valIndex":"0000001:MofDep:101007"},{"bid":"702b808812894397988c8bf567266de2","eleValCode":"101004","eleValLevel":1,"eleValName":"预算处（编审处）","isLeaf":"1","parentId":"","valIndex":"0000001:MofDep:101004"},{"bid":"73208946e51811eab9f3f03f95dd5060","eleValCode":"101006","eleValLevel":1,"eleValName":"国库处","isLeaf":"1","parentId":"","valIndex":"0000001:MofDep:101006"}],"elementCode":"MofDep","elementName":"财政内部机构"}]},
+          "billTypeCode": "0000001",
+          "authorityCode": "485354"
     },
-    "source": "List dataAuths = ((List) ctx._source.dataAuth); for (dataAuthItem in dataAuths) {List authGrops=((List)dataAuthItem.authorityGroup); authGrops.removeIf( item -> {item.authorityGroupCode == params.authorityCode;})}"
+    "source": "List dataAuths = ((List) ctx._source.dataAuth);for (dataAuthItem in dataAuths) {if(dataAuthItem.billTypeCode==params.billTypeCode){ List authGrops = ((List) dataAuthItem.authorityGroup);authGrops.removeIf(item -> { item.authorityGroupCode == params.authorityCode; });authGrops.add(params.result)}}"
   },
 
   "query": {
     "term": {
-      "userId": "694621126537510912"
+      "userRoleId": "823517556177637376"
     }
   }
 }

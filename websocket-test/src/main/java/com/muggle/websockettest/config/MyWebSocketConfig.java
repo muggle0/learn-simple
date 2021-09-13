@@ -11,8 +11,8 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
  * Created by muggle
  */
 
-@Configuration
-@EnableWebSocket
+//@Configuration
+//@EnableWebSocket
 public class MyWebSocketConfig implements WebSocketConfigurer {
 
 
