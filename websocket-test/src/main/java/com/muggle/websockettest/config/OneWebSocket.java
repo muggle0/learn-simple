@@ -3,7 +3,6 @@ package com.muggle.websockettest.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;

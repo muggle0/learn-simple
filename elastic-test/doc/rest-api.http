@@ -512,9 +512,66 @@ Content-Type: application/json
             "isLeaf": "1"
           }
         ]
-      }]
-    }]
-  }]
+      }
+      ]
+    }
+    ]
+  }
+  ]
+}
+
+###  816015579952713728
+POST http://localhost:9200/auth/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "userRoleId": {
+              "value": "816015579952713728",
+              "boost": 1.0
+            }
+          }
+        }
+      ],
+      "adjust_pure_negative": true,
+      "boost": 1.0
+    }
+  }
+}
+
+###
+POST http://localhost:9200/auth/_search
+Content-Type: application/json
+
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "dataAuth.billTypeCode": {
+              "value": "0000001",
+              "boost": 1.0
+            }
+          }
+        },
+        {
+          "term": {
+            "orgName": {
+              "value": "中共广东省委机关幼儿院",
+              "boost": 1.0
+            }
+          }
+        }
+      ],
+      "adjust_pure_negative": true,
+      "boost": 1.0
+    }
+  }
 }
 
 ###
