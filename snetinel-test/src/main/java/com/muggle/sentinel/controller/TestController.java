@@ -47,4 +47,8 @@ public class TestController {
     public String test2(){
         return ">>>>>>>>";
     }
+
+    public static void main(String[] args) {
+
+    }
 }
