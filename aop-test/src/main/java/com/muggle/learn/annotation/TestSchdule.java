@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @Author: muggle
  * @Date: 2020/4/26
  **/
-@Component
+//@Component
 @Order(10)
 public class TestSchdule {
     @Autowired

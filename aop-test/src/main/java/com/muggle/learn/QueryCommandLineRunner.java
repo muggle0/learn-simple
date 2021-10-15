@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
  * @Date: 2020/4/26
  **/
 @Order(1)
-@Component
+//@Component
 public class QueryCommandLineRunner /*implements CommandLineRunner*/ {
     @Autowired
     ApplicationContext applicationContext;
