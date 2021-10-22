@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 public class ProxyTestController {
-    @GetMapping("/baiyifengyun/ajax/blogStats")
+    @GetMapping("/test")
     public String test(HttpServletRequest request){
             return ">>>>>>>>>>>";
     }
