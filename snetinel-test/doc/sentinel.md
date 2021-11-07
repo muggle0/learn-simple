@@ -609,7 +609,7 @@ sentinel 增加规则的方式 包括三种，数据源加载，代码加载，�
 熔断降级会在调用链路中当某个资源指数超出阈值时对这个资源的调用进行熔断，在熔断时间窗口内所有调用都快速失败调用降级方法，直到熔断恢复；
 降级熔断和流控规则的区别是在超出阈值后的时间窗内所有的调用都会被降级，直到熔断恢复。
 
-降级熔断概念
+熔断降级相关概念：
 
 
 - resource：资源名称，资源可以是一个代码块或者方法 
@@ -627,10 +627,23 @@ sentinel 增加规则的方式 包括三种，数据源加载，代码加载，�
 - 秒级异常比例：当每秒请求数超过n个，且异常请求的比例超过阈值，那么在接下来的timeWindow 时间内会自动熔断降级接下来的响应。
 - 分钟级异常数：当一分钟内请求的数量超过阈值后会熔断，因为统计时长是一分钟，当timeWindow降级熔断时间小于一分钟，当降级熔断结束后可能仍超过异常阈值继续进入熔断降级状态
 
-熔断降级相关概念：
-
-
 降级熔断代码配置
+```java
+    DegradeRule rule = new DegradeRule();
+    List<DegradeRule> rules1=new ArrayList<>();
+    //资源名称
+    rule.setResource("test.hello");
+    // 熔断平均响应时间阈值
+    rule.setCount(0.01);
+    // 秒级RT
+    rule.setGrade(RuleConstant.DEGRADE_GRADE_RT);
+    rule.setTimeWindow(10);
+    rules1.add(rule);
+    DegradeRuleManager.loadRules(rules1);
+```
+
+流控规则控制台配置示例：
+
 
 ## 热点规则
 

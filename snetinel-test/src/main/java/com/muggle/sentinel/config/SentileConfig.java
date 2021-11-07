@@ -5,6 +5,8 @@ import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
 import com.alibaba.csp.sentinel.datasource.nacos.NacosDataSource;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
+import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.fastjson.JSON;
@@ -51,10 +53,19 @@ public class SentileConfig {
 //        AuthorityRuleManager
         FlowRuleManager.loadRules(rules);
 
-        ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new NacosDataSource<>(remoteAddress, groupId, dataId,
+       /* ReadableDataSource<String, List<FlowRule>> flowRuleDataSource = new NacosDataSource<>(remoteAddress, groupId, dataId,
             source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
-            }));
-        FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
+            }));*/
+//        FlowRuleManager.register2Property(flowRuleDataSource.getProperty());
+        DegradeRule rule = new DegradeRule();
+        List<DegradeRule> rules1=new ArrayList<>();
+        rule.setResource("test.hello");
+        rule.setCount(0.01);
+        // 秒级RT
+        rule.setGrade(RuleConstant.DEGRADE_GRADE_RT);
+        rule.setTimeWindow(10);
+        rules1.add(rule);
+        DegradeRuleManager.loadRules(rules1);
     }
 
 
