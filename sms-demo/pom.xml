@@ -83,6 +83,11 @@
             <artifactId>qcloudsms</artifactId>
             <version>1.0.6</version>
         </dependency>
+        <dependency>
+            <groupId>com.dm</groupId>
+            <artifactId>DmDialect-for-hibernate</artifactId>
+            <version>5.0</version>
+        </dependency>
     </dependencies>
 
     <build>
