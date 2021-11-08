@@ -19,6 +19,6 @@ public interface SmsProxy {
 
 
     default SmsMessageResp sendMessage(SmsMessage message){
-
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.muggle.smsdemo;
+package com.muggle.sms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
