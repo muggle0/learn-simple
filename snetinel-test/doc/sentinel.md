@@ -729,16 +729,122 @@ Sentinel利用LRU策略统计最近最常访问的热点参数，结合令牌桶
 - qps: 应用入口qps
 - strategy: 限制模式，分黑名单模式（authority_black），白名单模式（authority_white 默认）
 
-## 集群流控
+授权规则代码配置示例：
 
-## sentinel核心类解析
-FlowSlot
+```java
+    AuthorityRule authorityRule = new AuthorityRule();
+    authorityRule.setStrategy(RuleConstant.AUTHORITY_BLACK);
+    authorityRule.setLimitApp("127.0.0.1");
+    authorityRule.setResource("test.hello");
+    AuthorityRuleManager.loadRules(Collections.singletonList(authorityRule));
+```
+这里 limitApp 我设置的是 请求来源的ip 地址，这个ip地址是要我们手动去通过 `ContextUtil.enter(resourceName, origin)` 来设置的。
 
-https://blog.csdn.net/guzhangyu12345/article/details/107490874
+```java
+public class MyInterceptor implements HandlerInterceptor {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        ContextUtil.enter("test.hello",  request.getHeader("x-forwarded-for"));
+        return true;
+    }
+}
+```
+![](授权规则.jpg)
+
+## spring web 拦截适配
+
+前文提到过 `sentinel-spring-webmvc-adapter` 依赖会提供一个将拦截器 `SentinelWebInterceptor`, 源码为：
+
+```java
+    protected String getResourceName(HttpServletRequest request) {
+        Object resourceNameObject = request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+        if (resourceNameObject != null && resourceNameObject instanceof String) {
+            String resourceName = (String)resourceNameObject;
+            UrlCleaner urlCleaner = this.config.getUrlCleaner();
+            if (urlCleaner != null) {
+                resourceName = urlCleaner.clean(resourceName);
+            }
+
+            if (StringUtil.isNotEmpty(resourceName) && this.config.isHttpMethodSpecify()) {
+                resourceName = request.getMethod().toUpperCase() + ":" + resourceName;
+            }
+
+            return resourceName;
+        } else {
+            return null;
+        }
+    }
+```
+
+它会解析一个请求为的请求地址为一个资源名，然后在sentinel控制台上就能看到各个请求的流控数据。但它没有提供请求适配各类流控规则的相关代码，
+我们想要无缝的通过请求去适配各种流控规则还需要引入依赖：
+
+```xml
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-web-servlet</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+```
+然后注册一个过滤器：
+
+```java
+
+    @Bean
+    public FilterRegistrationBean sentinelFilterRegistration() {
+        FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new CommonFilter());
+        registration.addUrlPatterns("/*");
+        registration.setName("sentinelFilter");
+        registration.setOrder(1);
+
+        return registration;
+    }
+```
+接入 filter 之后，所有访问的 Web URL 就会被自动统计为 Sentinel 的资源，可以针对单个 URL 维度进行流控。
+若希望区分不同 HTTP Method，可以调用 `CommonFilter.init(FilterConfig filterConfig)` 方法将 HTTP_METHOD_SPECIFY 这个 init parameter 设为 true，给每个 URL 资源加上前缀，比如 GET:/foo
+这个包中一个重要类是 `WebCallbackManager` 许多限流配置都需要使用到这个类的api。
+
+设置限流处理器：
+
+```java
+    WebCallbackManager.setUrlBlockHandler((request, response, e) -> {
+        PrintWriter writer = response.getWriter();
+        writer.println(">>>>");
+        writer.close();
+    });
+
+```
+
+设置url清洗器：
+
+```java
+WebCallbackManager.setUrlCleaner(new UrlCleaner() {
+    @Override
+    public String clean(String originUrl) {
+        if (originUrl == null || originUrl.isEmpty()) {
+            return originUrl;
+        }
+        // 比如将满足 /foo/{id} 的 URL 都归到 /foo/*
+        if (originUrl.startsWith("/foo/")) {
+            return "/foo/*";
+        }
+        // 不希望统计 *.ico 的资源文件，可以将其转换为 empty string (since 1.6.3)
+        if (originUrl.endsWith(".ico")) {
+            return "";
+        }
+        return originUrl;
+    }
+});
+```
+设置请求来源名称，通过该配置我们在授权规则中就不需要通过`ContextUtil.enter(resourceName, origin)` 设置，而是通过一个自定义
+的`RequestOriginParser` 直接指定请求的来源，也就是授权规则中的 `limitApp`:
+
+```java
+    WebCallbackManager.setRequestOriginParser(request -> {
+        return request.getHeader("x-forwarded-for");
+    });
+```
 
 
-## 
-    
-## 结语
-
-## 
+ 
