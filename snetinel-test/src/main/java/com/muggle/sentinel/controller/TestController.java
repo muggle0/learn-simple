@@ -1,6 +1,7 @@
 package com.muggle.sentinel.controller;
 
 import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
@@ -45,6 +46,12 @@ public class TestController {
     @GetMapping("/test2")
     @SentinelResource(value = "test.hello")
     public String test2(){
+        return ">>>>>>>>";
+    }
+
+    @GetMapping("/test3")
+    @SentinelResource(entryType = EntryType.IN)
+    public String test3(){
         return ">>>>>>>>";
     }
 
