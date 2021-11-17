@@ -22,7 +22,7 @@ import java.sql.Timestamp;
  * A MessageTunnel.
  */
 @Entity
-@Table(name = "mpc_message_tunnel")
+@Table(name = "MPC_MESSAGE_TUNNEL")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @EntityListeners(AuditingEntityListener.class)
 @Where(clause = "deleted = 0")
@@ -139,8 +139,8 @@ public class MessageTunnelEntity implements Serializable {
     @Column(name = "mail_password")
     private String mailPassword;
 
-    @Column(name = "comment")
-    private String comment;
+    @Column(name = "comment_")
+    private String comment_;
 
     @Column(name = "update_by")
     private String updateBy;
@@ -272,15 +272,15 @@ public class MessageTunnelEntity implements Serializable {
     }
 
     public String getComment() {
-        return comment;
+        return comment_;
     }
 
     public void setComment(String comment) {
-        this.comment = comment;
+        this.comment_ = comment;
     }
 
     public MessageTunnelEntity comment(String comment) {
-        this.comment = comment;
+        this.comment_ = comment;
         return this;
     }
 

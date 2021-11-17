@@ -22,6 +22,7 @@ public class SmsController {
     private MessageTunnelRepository tunnelRepository;
     @GetMapping("/test")
     public String test(){
+        final MessageTunnelEntity byTunnelId = tunnelRepository.findByTunnelId(1l);
         MessageTunnelEntity messageTunnelEntity = new MessageTunnelEntity();
         messageTunnelEntity.setMessageChannel((byte) 0);
         messageTunnelEntity.setTunnelStatus((byte) 1);
