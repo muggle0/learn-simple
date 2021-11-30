@@ -12,8 +12,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
@@ -28,6 +32,8 @@ public class SmsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsController.class);
     @Autowired
     private MessageTunnelRepository tunnelRepository;
+    @Autowired
+    RestTemplate restTemplate;
     @GetMapping("/test")
     public String test(){
         final MessageTunnelEntity byTunnelId = tunnelRepository.findByTunnelId(1l);
@@ -49,7 +55,7 @@ public class SmsController {
         final String username = ClientUtils.encrypt("username=AjkDbl0+UjA=", "chinagdn");
         final String password = ClientUtils.encrypt("password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==","chinagdn" );
         try {
-            final Object[] connMas = ClientUtils.callWeb("10.21.242.252:8089","ConnMas", username, password);
+            final Object[] connMas = ClientUtils.callWeb("http://10.21.242.252:8089","ConnMas", username, password);
             LOGGER.info("connMas:{}", Arrays.toString(connMas));
             return "true";
         }catch (Exception e){
@@ -58,4 +64,16 @@ public class SmsController {
         }
     }
 
+    @GetMapping("/auth2")
+    public String test3(){
+        // 测试华为云
+        final String url = "http://10.21.239.103:8280".concat("/idp/oauth2/getToken").concat("?client_id=")
+            .concat("tyxxpt").concat("&grant_type=authorization_code&code=").concat("xxx")
+            .concat("&client_secret=").concat("02f702fdb3ef45e8929fdf66fb7c66be");
+        final ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.POST, null, String.class);
+       LOGGER.info(exchange.getStatusCode().toString());
+       LOGGER.info(exchange.getBody());
+        // {"CLIENT_SECRET":"02f702fdb3ef45e8929fdf66fb7c66be"}  应用ID：tyxxpt
+        return "xxx";
+    }
 }
