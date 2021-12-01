@@ -34,8 +34,9 @@ public class SmsController {
     private MessageTunnelRepository tunnelRepository;
     @Autowired
     RestTemplate restTemplate;
+
     @GetMapping("/test")
-    public String test(){
+    public String test() {
         final MessageTunnelEntity byTunnelId = tunnelRepository.findByTunnelId(1l);
         MessageTunnelEntity messageTunnelEntity = new MessageTunnelEntity();
         messageTunnelEntity.setMessageChannel((byte) 0);
@@ -50,29 +51,29 @@ public class SmsController {
     }
 
     @GetMapping("/region")
-    public String test2(){
+    public String test2() {
 //        username=AjkDbl0+UjA=，password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==
         final String username = ClientUtils.encrypt("username=AjkDbl0+UjA=", "chinagdn");
-        final String password = ClientUtils.encrypt("password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==","chinagdn" );
+        final String password = ClientUtils.encrypt("password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==", "chinagdn");
         try {
-            final Object[] connMas = ClientUtils.callWeb("http://10.21.242.252:8089","ConnMas", username, password);
+            final Object[] connMas = ClientUtils.callWeb("http://10.21.242.252:8089", "ConnMas", username, password);
             LOGGER.info("connMas:{}", Arrays.toString(connMas));
             return "true";
-        }catch (Exception e){
-            LOGGER.error("调用异常",e);
+        } catch (Exception e) {
+            LOGGER.error("调用异常", e);
             return "false";
         }
     }
 
     @GetMapping("/auth2")
-    public String test3(){
+    public String test3() {
         // 测试华为云
         final String url = "http://10.21.239.103:8280".concat("/idp/oauth2/getToken").concat("?client_id=")
             .concat("tyxxpt").concat("&grant_type=authorization_code&code=").concat("xxx")
             .concat("&client_secret=").concat("02f702fdb3ef45e8929fdf66fb7c66be");
         final ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.POST, null, String.class);
-       LOGGER.info(exchange.getStatusCode().toString());
-       LOGGER.info(exchange.getBody());
+        LOGGER.info(exchange.getStatusCode().toString());
+        LOGGER.info(exchange.getBody());
         // {"CLIENT_SECRET":"02f702fdb3ef45e8929fdf66fb7c66be"}  应用ID：tyxxpt
         return "xxx";
     }
