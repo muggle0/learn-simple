@@ -66,8 +66,8 @@ public class SmsController {
 
     @GetMapping("/auth2")
     public String test3(){
-        // 测试华为云
-        final String url = "http://10.21.239.103:8280".concat("/idp/oauth2/getToken").concat("?client_id=")
+        // 测试华为云  http://10.21.242.252:8089/services/Sms?wsdl
+        final String url = "http://10.21.233.179".concat("/idp/oauth2/getToken").concat("?client_id=")
             .concat("tyxxpt").concat("&grant_type=authorization_code&code=").concat("xxx")
             .concat("&client_secret=").concat("02f702fdb3ef45e8929fdf66fb7c66be");
         final ResponseEntity<String> exchange = restTemplate.exchange(url, HttpMethod.POST, null, String.class);
