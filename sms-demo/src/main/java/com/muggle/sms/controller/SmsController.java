@@ -55,7 +55,7 @@ public class SmsController {
         final String username = ClientUtils.encrypt("username=AjkDbl0+UjA=", "chinagdn");
         final String password = ClientUtils.encrypt("password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==","chinagdn" );
         try {
-            final Object[] connMas = ClientUtils.callWeb("http://10.21.242.252:8089","ConnMas", username, password);
+            final Object[] connMas = ClientUtils.callWeb("http://localhost/webService/TestService?wsdl","ConnMas", username, password);
             LOGGER.info("connMas:{}", Arrays.toString(connMas));
             return "true";
         }catch (Exception e){
