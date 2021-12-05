@@ -17,7 +17,7 @@ import javax.xml.ws.Endpoint;
  * Date 2021/11/11
  * Created by muggle
  */
-//@Configuration
+@Configuration
 public class CxfConfig {
 
     @Bean
