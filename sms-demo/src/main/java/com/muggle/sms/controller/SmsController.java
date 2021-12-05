@@ -51,11 +51,11 @@ public class SmsController {
 
     @GetMapping("/region")
     public String test2(){
-//        username=AjkDbl0+UjA=，password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==
+//        username=AjkDbl0+UjA=，password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==  https://www.cnblogs.com/myitnews/p/12370308.html
         final String username = ClientUtils.encrypt("username=AjkDbl0+UjA=", "chinagdn");
         final String password = ClientUtils.encrypt("password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==","chinagdn" );
         try {
-            final Object[] connMas = ClientUtils.callWeb("http://10.21.242.252:8089","ConnMas", username, password);
+            final Object[] connMas = ClientUtils.callWeb("http://10.21.233.179/services/Sms?wsdl","ConnMas", username, password);
             LOGGER.info("connMas:{}", Arrays.toString(connMas));
             return "true";
         }catch (Exception e){
