@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+    <process id="oneTaskProcess" name="The One Task Process">
+        <startEvent id="theStart" />
+        <sequenceFlow id="flow1" sourceRef="theStart" targetRef="theTask" />
+        <userTask id="theTask" name="my task" flowable:assignee="${flowableParams.id}"/>
+
+        <sequenceFlow id="flow2" sourceRef="theTask" targetRef="theEnd" />
+        <endEvent id="theEnd" />
+    </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_test">
+    <bpmndi:BPMNPlane bpmnElement="test" id="BPMNPlane_test">
+      <bpmndi:BPMNShape id="shape-cf473abf-e0de-458d-bda4-8cd00b319290" bpmnElement="a1">
+        <omgdc:Bounds x="90.0" y="-5.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-784520dd-08eb-42ab-bf57-c53e1e262dc7" bpmnElement="b1">
+        <omgdc:Bounds x="167.5" y="12.5" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-1cbeabc6-16de-4906-a039-9cf3093e4b9c" bpmnElement="l1">
+        <omgdi:waypoint x="120.0" y="17.5"/>
+        <omgdi:waypoint x="167.5" y="32.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-3232a082-55a2-4031-bd44-58874e943289" bpmnElement="sid-084722dd-ef34-4ed3-a53b-6abead432219">
+        <omgdc:Bounds x="300.0" y="67.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-e93357cf-5e2b-42a2-abdc-4e54ec036f16" bpmnElement="sid-df20173d-d74b-464f-8d14-543bea85ed10">
+        <omgdi:waypoint x="267.5" y="72.5"/>
+        <omgdi:waypoint x="300.0" y="74.5"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

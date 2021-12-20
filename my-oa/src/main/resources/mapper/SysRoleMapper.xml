@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcat.mapper.SysRoleMapper">
+    <select id="getRoleCode" resultType="java.lang.String">
+        select distinct r.code
+        from sys_role r right join sys_user_role ur on r.id=ur.role_id
+        right join sys_user u on ur.user_id=u.id
+        where u.username=#{username} and r.statu = 1;
+    </select>
+
+    <select id="getRoleInfo" resultType="com.lcat.entity.SysRole">
+        select distinct r.* from sys_menu m
+        left join sys_role_menu rm on m.id = rm.menu_id
+        left join sys_role r on rm.role_id = r.id
+        left join sys_user_role ur on ur.role_id = r.id
+        LEFT JOIN sys_user u on u.id = ur.user_id
+        where u.username = #{username}
+        ORDER BY orderNum;
+    </select>
+    <select id="getRoleByUserId" resultType="com.lcat.entity.SysRole">
+        select distinct r.* from sys_menu m
+        left join sys_role_menu rm on m.id = rm.menu_id
+        left join sys_role r on rm.role_id = r.id
+        left join sys_user_role ur on ur.role_id = r.id
+        LEFT JOIN sys_user u on u.id = ur.user_id
+        where u.id = #{id}
+        ORDER BY orderNum;
+    </select>
+
+    <select id="getRoleById" resultType="com.lcat.entity.SysRole">
+        select r.* from sys_role r
+        where r.id=#{id}
+    </select>
+
+    <select id="getAllRole" resultType="com.lcat.entity.SysRole">
+        select * from sys_role limit #{start}, #{end}
+    </select>
+
+    <select id="getRoleByName" resultType="com.lcat.entity.SysRole">
+        select r.* from sys_role r
+        where r.name like concat('%',#{name,jdbcType=VARCHAR},'%')
+        limit #{start}, #{end}
+    </select>
+
+    <insert id="insertRole" parameterType="com.lcat.entity.SysRole" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_role(name, code, remark, created, updated, statu)
+        values(#{name}, #{code}, #{remark}, #{created}, #{updated}, #{statu})
+    </insert>
+
+    <delete id="deleteRoleByIds" parameterType="java.util.List">
+        delete from sys_role
+        where id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <update id="updateRoleById" parameterType="com.lcat.entity.SysRole">
+        update sys_role r set r.name=#{name}, r.code=#{code}, r.remark=#{remark}, r.updated=#{updated}, r.statu=#{statu}
+        where r.id=#{id}
+    </update>
+
+</mapper>

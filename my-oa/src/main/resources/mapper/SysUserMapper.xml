@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcat.mapper.SysUserMapper">
+    <select id="loadUserByUsername" resultType="com.lcat.entity.SysUser">
+       select id,username,password,avatar,enabled,statu,created,city from sys_user u
+       <where>
+           u.username=#{username} and u.enabled=1;
+       </where>
+    </select>
+
+    <select id="getUserInfo" resultType="com.lcat.entity.SysUser">
+        select distinct id, username, avatar, created from sys_user
+        where username = #{username} and enabled = 1
+    </select>
+
+    <select id="getUserInfoByName" resultType="com.lcat.entity.SysUser">
+        select distinct id, username, password, avatar, email, city, created, updated, last_login as lastLogin, statu
+        from sys_user
+        where username like concat('%', #{username, jdbcType=VARCHAR}, '%') and enabled = 1
+        limit #{start}, #{end}
+    </select>
+
+    <select id="getAllUserInfo" resultType="com.lcat.entity.SysUser" >
+        select distinct id, username, password, avatar, email, city, created, updated, last_login as lastLogin, statu
+        from sys_user
+        where enabled = 1
+        limit #{start}, #{end}
+    </select>
+
+    <select id="getUserInfoById" resultType="com.lcat.entity.SysUser">
+        select id, username, password, avatar, email, city, created, updated, last_login as lastLogin, statu
+        from sys_user
+        where enabled = '1' and id = #{id}
+    </select>
+
+    <update id="updateUserInfoById" parameterType="com.lcat.entity.SysUser">
+        update sys_user set username=#{username}, email=#{email}, city=#{city}, statu=#{statu}, updated=#{updated}
+        where id=#{id}
+    </update>
+
+    <insert id="insertUserInfo" keyColumn="id" keyProperty="id" useGeneratedKeys="true" parameterType="com.lcat.entity.SysUser">
+        insert into sys_user(username, password, avatar, email, city, created, updated, last_login, statu, enabled)
+        values (#{username}, #{password}, #{avatar}, #{email}, #{city}, #{created}, #{updated}, #{lastLogin}, #{statu}, #{enabled})
+    </insert>
+
+    <delete id="deleteUserByIds" parameterType="java.util.List">
+        update sys_user set enabled = '0'
+        where id in
+            <foreach collection="array" item="ids" open="(" separator="," close=")">
+                #{ids}
+            </foreach>
+    </delete>
+
+    <update id="repass">
+        update sys_user set password=#{password} where id=#{id}
+    </update>
+
+    <update id="updatePass" parameterType="com.lcat.entity.SysUser">
+        update sys_user set password=#{password} where username=#{username}
+    </update>
+
+</mapper>
