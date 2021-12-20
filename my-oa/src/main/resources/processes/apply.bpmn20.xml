@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="apply" name="apply" isExecutable="true">
+    <startEvent id="theStartEvent"/>
+    <!--为用户任务配置办理人，第一个任务提交给经理，第二个提交给管理者-->
+    <userTask id="firstApproval" flowable:assignee="${employee}" name="approve1"/>
+    <sequenceFlow id="line1" sourceRef="theStartEvent" targetRef="firstApproval"/>
+    <userTask id="secondApproval" name="approve2" flowable:assignee="${manager}"/>
+    <sequenceFlow id="line2" sourceRef="firstApproval" targetRef="secondApproval"/>
+    <endEvent id="theEndEvent"/>
+    <serviceTask id="externalSystemCall" flowable:exclusive="true" flowable:class="org.flowable.CallExternalSystemDelegate"/>
+    <sequenceFlow id="sid-e0814fc8-ac3b-4497-b639-02609572ced0" sourceRef="secondApproval" targetRef="externalSystemCall"/>
+    <sequenceFlow id="sid-70d7fa64-3ce8-40f1-b298-c5f376dc4d52" sourceRef="externalSystemCall" targetRef="theEndEvent"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_apply">
+    <bpmndi:BPMNPlane bpmnElement="apply" id="BPMNPlane_apply">
+      <bpmndi:BPMNShape id="shape-e197b7bf-13e2-4d4f-a891-ab75966e7252" bpmnElement="theStartEvent">
+        <omgdc:Bounds x="-130.0" y="-15.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-127e00b3-05d1-4675-a628-e09f946134cf" bpmnElement="firstApproval">
+        <omgdc:Bounds x="-70.0" y="-40.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-5a5476c7-c7ab-4f88-aeb5-5c2ebada3a5d" bpmnElement="line1">
+        <omgdi:waypoint x="-100.0" y="0.0"/>
+        <omgdi:waypoint x="-70.0" y="0.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="sid-578703e3-8551-4969-af9d-487cc1eb646c" bpmnElement="secondApproval">
+        <omgdc:Bounds x="62.455593" y="-40.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-aac09ca9-768a-4ef0-b4de-5f501e9a8dbb" bpmnElement="line2">
+        <omgdi:waypoint x="30.0" y="0.0"/>
+        <omgdi:waypoint x="62.455597" y="0.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="shape-3ad1ee8a-008c-4c17-9ab5-ad6ab19d079d" bpmnElement="theEndEvent">
+        <omgdc:Bounds x="230.0" y="-15.0" width="30.0" height="30.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape-db955fff-3c99-4c21-8de0-ecc53fe4771b" bpmnElement="externalSystemCall">
+        <omgdc:Bounds x="155.0" y="-175.0" width="100.0" height="80.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="edge-84fd3305-d252-4b34-bac0-dd18ec77187f" bpmnElement="sid-e0814fc8-ac3b-4497-b639-02609572ced0">
+        <omgdi:waypoint x="162.4556" y="0.0"/>
+        <omgdi:waypoint x="205.0" y="-95.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="edge-689c1341-fa3b-4bb3-a81c-3f0cbea2b51f" bpmnElement="sid-70d7fa64-3ce8-40f1-b298-c5f376dc4d52">
+        <omgdi:waypoint x="230.0" y="-95.0"/>
+        <omgdi:waypoint x="237.5" y="-15.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,5 @@
+###
+GET http://localhost:8081/test/encode?code=admin
+Content-Type: application/json
+
+###

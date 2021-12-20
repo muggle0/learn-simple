@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lcat.mapper.SysMenuMapper">
+    <sql id="selectInfo">
+        distinct m.id, m.parent_id as parentId, m.name, m.path,
+        m.perms, m.component, m.icon, m.orderNum
+    </sql>
+    <select id="getUserMenu" resultType="com.lcat.entity.SysMenu">
+        select <include refid="selectInfo" />
+        from sys_menu m
+                 left join sys_role_menu rm on m.id = rm.menu_id
+                 left join sys_user_role ur on ur.role_id = rm.role_id
+                 LEFT JOIN sys_user u on u.id = ur.user_id
+        where m.type in('0','1') and m.enabled = 1 and u.username = #{username} order by m.orderNum
+    </select>
+
+    <select id="getUserPerms" resultType="java.lang.String">
+        select m.perms
+        from sys_menu m
+        left join sys_role_menu rm on m.id = rm.menu_id
+        left join sys_user_role ur on ur.role_id = rm.role_id
+        LEFT JOIN sys_user u on u.id = ur.user_id
+        where m.enabled = 1 and u.username = #{username} order by m.orderNum
+    </select>
+
+    <select id="getMenuTree" resultType="com.lcat.entity.SysMenu">
+        select distinct m.id, m.parent_id as parentId, m.name, m.path,
+                        m.perms, m.component, m.type, m.icon, m.orderNum, m.created,
+                        m.updated, m.statu
+        from sys_menu m
+            left join sys_role_menu rm on m.id = rm.menu_id
+            left join sys_user_role ur on ur.role_id = rm.role_id
+            LEFT JOIN sys_user u on u.id = ur.user_id
+        where m.enabled = 1 and u.username = #{username} order by m.orderNum
+    </select>
+
+    <insert id="insertMenu" parameterType="com.lcat.entity.SysMenu" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_menu (parent_id, name, path, perms, component, type, icon,
+                              orderNum, created, updated, statu, enabled)
+        values (#{parentId}, #{name}, #{path}, #{perms}, #{component}, #{type}, #{icon},
+                #{orderNum}, #{created}, #{updated}, #{statu}, '1');
+    </insert>
+
+    <select id="getMenuById" resultType="com.lcat.entity.SysMenu">
+        select * from sys_menu where enabled = 1 and id=#{id}
+    </select>
+
+    <update id="updateMenu" parameterType="com.lcat.entity.SysMenu">
+        update sys_menu set parent_id=#{parentId}, name=#{name}, path=#{path},
+        perms=#{perms}, component=#{component}, type=#{type}, icon=#{icon},
+        orderNum=#{orderNum}, created=#{created}, updated=#{updated}, statu=#{statu}
+        where enabled= 1 and id=#{id}
+    </update>
+
+    <update id="deleteMenu" parameterType="java.lang.Long">
+        update sys_menu
+        set enabled = '0'
+        where id=#{id};
+    </update>
+
+</mapper>
