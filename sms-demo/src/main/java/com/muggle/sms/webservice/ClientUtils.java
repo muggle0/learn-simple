@@ -55,8 +55,8 @@ public class ClientUtils {
         Object[] objects;
         objects = client.invoke(operationName, params);
         return objects;
-    }
 
+    }
     public static String encrypt(String txt, String key) {
         String encrypt_key = "0f9cfb7a9acced8a4167ea8006ccd098";
         int ctr = 0;

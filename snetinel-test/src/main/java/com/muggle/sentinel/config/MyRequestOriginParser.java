@@ -11,5 +11,6 @@ public class MyRequestOriginParser implements RequestOriginParser {
     public String parseOrigin(HttpServletRequest request) {
         String ipAddress = request.getHeader("x-forwarded-for");
         return  ipAddress;
+
     }
 }

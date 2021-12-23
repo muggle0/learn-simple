@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://10.21.242.252:8089/services/Sms" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://10.21.242.252:8089/services/Sms" xmlns:intf="http://10.21.242.252:8089/services/Sms" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <!--WSDL created by Apache Axis version: 1.4
+   Built on Apr 22, 2006 (06:55:48 PDT)-->
+
+   <wsdl:message name="checkpassRequest">
+
+      <wsdl:part name="username" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="ConnMasRequest">
+
+      <wsdl:part name="username" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="checkpassResponse">
+
+      <wsdl:part name="checkpassReturn" type="xsd:boolean"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getUpSmsResponse">
+
+      <wsdl:part name="getUpSmsReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getDownSmsResultResponse">
+
+      <wsdl:part name="getDownSmsResultReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="ConnMasResponse">
+
+      <wsdl:part name="ConnMasReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getUpSmsRequest">
+
+      <wsdl:part name="username" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="destaddr" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="RspUpSmsResponse">
+
+      <wsdl:part name="RspUpSmsReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getSpecialDownSmsResultRequest">
+
+      <wsdl:part name="username" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="batch" type="soapenc:string"/>
+
+      <wsdl:part name="msgid" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="InsertDownSmsResponse">
+
+      <wsdl:part name="InsertDownSmsReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="RspUpSmsRequest">
+
+      <wsdl:part name="username" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="msgid" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getDownSmsResultRequest">
+
+      <wsdl:part name="username" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="Batch" type="soapenc:string"/>
+
+      <wsdl:part name="cnt" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getSpecialDownSmsResultResponse">
+
+      <wsdl:part name="getSpecialDownSmsResultReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="InsertDownSmsRequest">
+
+      <wsdl:part name="username" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="batch" type="soapenc:string"/>
+
+      <wsdl:part name="sendbody" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="Sms">
+
+      <wsdl:operation name="ConnMas" parameterOrder="username password">
+
+         <wsdl:input message="impl:ConnMasRequest" name="ConnMasRequest"/>
+
+         <wsdl:output message="impl:ConnMasResponse" name="ConnMasResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="checkpass" parameterOrder="username password">
+
+         <wsdl:input message="impl:checkpassRequest" name="checkpassRequest"/>
+
+         <wsdl:output message="impl:checkpassResponse" name="checkpassResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="InsertDownSms" parameterOrder="username password batch sendbody">
+
+         <wsdl:input message="impl:InsertDownSmsRequest" name="InsertDownSmsRequest"/>
+
+         <wsdl:output message="impl:InsertDownSmsResponse" name="InsertDownSmsResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="RspUpSms" parameterOrder="username password msgid">
+
+         <wsdl:input message="impl:RspUpSmsRequest" name="RspUpSmsRequest"/>
+
+         <wsdl:output message="impl:RspUpSmsResponse" name="RspUpSmsResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getUpSms" parameterOrder="username password destaddr">
+
+         <wsdl:input message="impl:getUpSmsRequest" name="getUpSmsRequest"/>
+
+         <wsdl:output message="impl:getUpSmsResponse" name="getUpSmsResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getDownSmsResult" parameterOrder="username password Batch cnt">
+
+         <wsdl:input message="impl:getDownSmsResultRequest" name="getDownSmsResultRequest"/>
+
+         <wsdl:output message="impl:getDownSmsResultResponse" name="getDownSmsResultResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getSpecialDownSmsResult" parameterOrder="username password batch msgid">
+
+         <wsdl:input message="impl:getSpecialDownSmsResultRequest" name="getSpecialDownSmsResultRequest"/>
+
+         <wsdl:output message="impl:getSpecialDownSmsResultResponse" name="getSpecialDownSmsResultResponse"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="SmsSoapBinding" type="impl:Sms">
+
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="ConnMas">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="ConnMasRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.chinagdn.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="ConnMasResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://10.21.242.252:8089/services/Sms" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="checkpass">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="checkpassRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.chinagdn.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="checkpassResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://10.21.242.252:8089/services/Sms" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="InsertDownSms">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="InsertDownSmsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.chinagdn.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="InsertDownSmsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://10.21.242.252:8089/services/Sms" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="RspUpSms">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="RspUpSmsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.chinagdn.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="RspUpSmsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://10.21.242.252:8089/services/Sms" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getUpSms">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getUpSmsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.chinagdn.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getUpSmsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://10.21.242.252:8089/services/Sms" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getDownSmsResult">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getDownSmsResultRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.chinagdn.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getDownSmsResultResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://10.21.242.252:8089/services/Sms" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="getSpecialDownSmsResult">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getSpecialDownSmsResultRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://webservices.chinagdn.com" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getSpecialDownSmsResultResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://10.21.242.252:8089/services/Sms" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="SmsService">
+
+      <wsdl:port binding="impl:SmsSoapBinding" name="Sms">
+
+         <wsdlsoap:address location="http://10.21.242.252:8089/services/Sms"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

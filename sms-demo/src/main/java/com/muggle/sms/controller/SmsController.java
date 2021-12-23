@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.muggle.sms.entity.MessageTunnelEntity;
 import com.muggle.sms.repository.MessageTunnelRepository;
 import com.muggle.sms.webservice.ClientUtils;
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.xml.namespace.QName;
 import java.util.Arrays;
 
 /**
@@ -75,4 +78,42 @@ public class SmsController {
         // {"CLIENT_SECRET":"02f702fdb3ef45e8929fdf66fb7c66be"}  应用ID：tyxxpt
         return "xxx";
     }
+
+    public static void main(String[] args) throws Exception {
+       /* final String username = ClientUtils.encrypt("username=AjkDbl0+UjA=", "chinagdn");
+        final String password = ClientUtils.encrypt("password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==","chinagdn" );
+        ClientUtils.callWeb("http://10.21.233.179/services/Sms?wsdl","ConnMas", username, password);*/
+        sendWsdl(null);
+    }
+
+
+
+    public static String sendWsdl(Object obj) {
+        System.out.println("--------调用webservice接口begin-------");
+        // 创建动态客户端
+        JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
+
+        //对方的wsdl地址
+        Client client = dcf.createClient("file:D:/workspace/java/github/learn-simple/sms-demo/src/main/java/com/muggle/sms/controller/Sms.wsdl");
+        String json = null;
+        try {
+
+            QName qName = new QName("http://xx.zygxsq.cn/", "ConnMas");
+            final String username = ClientUtils.encrypt("AjkDbl0+UjA=", "chinagdn");
+            final String password = ClientUtils.encrypt("Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==","chinagdn" );//*原文章链接：https://blog.csdn.net/qq_27471405/article/details/105275657     * 其他均为盗版，公众号：灵儿的笔记(zygxsq)
+            Object[] objects1= client.invoke(qName, username,password); //参数1，参数2，参数3......按顺序放就看可以
+
+            json = JSONObject.toJSONString(objects1[0]);
+            System.out.println("返回数据:" + json.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("服务器断开连接，请稍后再试");
+        }
+        System.out.println("--------调用webservice接口end-------");
+        return json;
+
+
+    }
+
 }
