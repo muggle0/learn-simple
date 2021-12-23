@@ -71,23 +71,54 @@
             <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
             <version>3.2.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.axis/axis -->
+        <dependency>
+            <groupId>org.apache.axis</groupId>
+            <artifactId>axis</artifactId>
+            <version>1.4</version>
+        </dependency>
 
+        <!-- https://mvnrepository.com/artifact/axis/axis-ant -->
+        <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis-ant</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.xml/jaxrpc -->
+        <dependency>
+            <groupId>javax.xml</groupId>
+            <artifactId>jaxrpc</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/wsdl4j/wsdl4j -->
         <dependency>
             <groupId>wsdl4j</groupId>
             <artifactId>wsdl4j</artifactId>
+            <version>1.4</version>
         </dependency>
 
-     <!--   <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-            <version>2.5.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-            <version>3.2.1</version>
+        <!-- https://mvnrepository.com/artifact/saaj/saaj -->
+       <!-- <dependency>
+            <groupId>saaj</groupId>
+            <artifactId>saaj</artifactId>
+            <version>1.1</version>
         </dependency>-->
-        <!-- CXF webservice -->
+
+
+
+
+
+        <!--<dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+        </dependency>-->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>5.2.4.Final</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
