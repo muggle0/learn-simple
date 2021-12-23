@@ -32,7 +32,7 @@ public class CxfConfig {
     @Bean
     public Endpoint endpoint(@Autowired SpringBus springBus) {
         EndpointImpl endpoint = new EndpointImpl(springBus, new TestServiceImpl());
-        endpoint.publish("/TestService");
+        endpoint.publish("/Sms");
         return endpoint;
     }
 

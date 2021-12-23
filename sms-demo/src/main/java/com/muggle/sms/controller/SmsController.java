@@ -80,10 +80,10 @@ public class SmsController {
     }
 
     public static void main(String[] args) throws Exception {
-       /* final String username = ClientUtils.encrypt("username=AjkDbl0+UjA=", "chinagdn");
-        final String password = ClientUtils.encrypt("password=Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==","chinagdn" );
-        ClientUtils.callWeb("http://10.21.233.179/services/Sms?wsdl","ConnMas", username, password);*/
-        sendWsdl(null);
+        final String username = ClientUtils.encrypt("AjkDbl0+UjA=", "chinagdn");
+        final String password = ClientUtils.encrypt("Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==","chinagdn" );
+        ClientUtils.callWeb("http://10.21.233.179/services/Sms?wsdl","ConnMas", username, password);
+//        sendWsdl(null);
     }
 
 

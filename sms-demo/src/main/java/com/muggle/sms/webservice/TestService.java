@@ -9,14 +9,15 @@ import javax.jws.WebService;
  * Date 2021/11/11
  * Created by muggle
  */
-@WebService(name = "TestService", // 暴露服务名称
-    targetNamespace = "http://server.webservice.Bag.admin.com"// 命名空间,一般是接口的包名倒序
+@WebService(name = "Sms", // 暴露服务名称
+    targetNamespace = "http://10.21.242.252:8089/services/Sms"// 命名空间,一般是接口的包名倒序
 )
 public interface TestService {
     @WebMethod
-    public String sendMessage(@WebParam(name = "username") String username);
+    String sendMessage(@WebParam(name = "username") String username);
 
     @WebMethod
-    public boolean getFlag(@WebParam(name = "username") String username);
+    boolean getFlag(@WebParam(name = "username") String username);
+
 
 }

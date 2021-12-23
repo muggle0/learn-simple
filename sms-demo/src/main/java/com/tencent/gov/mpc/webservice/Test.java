@@ -17,7 +17,7 @@ import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
 
 public class Test {
     public static void main(String[] args) throws Exception {
-
+        test4();
     }
 
     public void test1(){
@@ -66,10 +66,11 @@ public class Test {
         System.out.println(result[0]);
     }
 
-    public void test4(){
+    public static void test4() throws RemoteException, MalformedURLException {
         SmsServiceLocator locator = new SmsServiceLocator();
         SmsSoapBindingStub stub = new SmsSoapBindingStub(new java.net.URL(locator.getSmsAddress()),locator);
         String string = stub.connMas("xxx", "xxx");
+        System.out.println(string);
     }
 
 }

@@ -106,6 +106,21 @@
             <version>1.1</version>
         </dependency>-->
 
+        <!-- https://mvnrepository.com/artifact/commons-discovery/commons-discovery -->
+        <dependency>
+            <groupId>commons-discovery</groupId>
+            <artifactId>commons-discovery</artifactId>
+            <version>0.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.0.4</version>
+        </dependency>
+
+
 
 
 
@@ -145,6 +160,41 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.12.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaLanguage>WSDL</schemaLanguage>
+                    <generatePackage>com.dexcoder.ws</generatePackage>
+                    <generateDirectory>${basedir}/src/main/java</generateDirectory>
+                    <schemas>
+                        <schema>
+                            <fileset>
+                                <!-- Defaults to schemaDirectory. -->
+                                <directory>${basedir}/src/main/resources</directory>
+                                <!-- Defaults to schemaIncludes. -->
+                                <includes>
+                                    <include>*.wsdl</include>
+                                </includes>
+                                <!-- Defaults to schemaIncludes -->
+                                <!--<excludes>-->
+                                <!--<exclude>*.xs</exclude>-->
+                                <!--</excludes>-->
+                                .
+                            </fileset>
+                            <!--<url>http://localhost:8080/ws/countries.wsdl</url>-->
+                        </schema>
+                    </schemas>
+                </configuration>
             </plugin>
         </plugins>
     </build>
