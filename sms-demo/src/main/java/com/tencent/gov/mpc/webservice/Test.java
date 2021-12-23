@@ -1,12 +1,18 @@
 package com.tencent.gov.mpc.webservice;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.rmi.RemoteException;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.ServiceException;
 
+import com.muggle.sms.webservice.ClientUtils;
 import org.apache.axis.client.Call;
 import org.apache.axis.client.Service;
 import org.apache.axis.encoding.XMLType;
@@ -19,6 +25,8 @@ public class Test {
     public static void main(String[] args) throws Exception {
         test4();
     }
+
+
 
     public void test1(){
         String url = "http://192.168.0.101:8089/myservice?wsdl";
@@ -69,8 +77,68 @@ public class Test {
     public static void test4() throws RemoteException, MalformedURLException {
         SmsServiceLocator locator = new SmsServiceLocator();
         SmsSoapBindingStub stub = new SmsSoapBindingStub(new java.net.URL(locator.getSmsAddress()),locator);
-        String string = stub.connMas("xxx", "xxx");
+        final String username = ClientUtils.encrypt("AjkDbl0+UjA=", "chinagdn");
+        final String password = ClientUtils.encrypt("Al0DJl12UmhXI1AyU1FXZ1w/B2MFNw==","chinagdn" );
+
+        String string = stub.connMas(username, password);
         System.out.println(string);
+        Resp userTest = (Resp) XMLUtil.convertXmlStrToObject(Resp.class, string);
     }
 
+
+
+
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlRootElement(name = "head")
+    @XmlType(propOrder = {
+            "message",
+            "code"
+    })
+    public static class Resp implements Serializable {
+        public Resp() {
+        }
+
+        public Resp(String code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        private String code;
+        private String message;
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
+
+    private static void test5() {
+        Resp resp = new Resp();
+        resp.setCode("xxx");
+        resp.setMessage("xxx");
+        XMLUtil.convertToXml(resp);
+
+    }
+    /*
+
+<?xml version="1.0" encoding="GBK" ?>
+<response>
+<head>
+<code>2</code>
+  <message>用户名密码错误</message>
+</head>
+</response>
+
+    * */
 }
