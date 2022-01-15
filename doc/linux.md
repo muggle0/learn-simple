@@ -153,3 +153,36 @@ groupdel
 网卡文件命名规则  ifcfg-xxx
 
 软连接
+
+## linux 基本命令
+
+### 目录操作
+
+1. mkdir 
+2. mkdir -p 递归创建目录
+3. 创建多个目录 mkdir [-p] a b c
+4. touch  a b c
+5. rm -r 递归 -f 强制删除
+6. cp -r 递归 复制 cp -r a/ b/
+7. mv
+
+### 压缩
+
+- gzip a.txt a.txt.gz
+- gunzip a.txt.gz
+- tar -c 创建 -x 解包 -v 可视化解压过程 -f 文件名 -z 压缩为gz -J xz格式
+
+### 输出重定向
+
+> 标准输出重定向 覆盖输出
+>> 追加输出重定向
+
+### 查看文件
+
+- cat 
+- tac
+- head  查看文件前n行 默认10 head -n xxx.txt 
+-- 从第3行开始显示，显示接下来10行内容。
+cat filename | tail -n +3 | head -n +10
+
+
