@@ -184,5 +184,85 @@ groupdel
 - head  查看文件前n行 默认10 head -n xxx.txt 
 -- 从第3行开始显示，显示接下来10行内容。
 cat filename | tail -n +3 | head -n +10
+cat test.log |grep 'xxx' -A10 -B10
+sed -n "/2022-01-14 15:05:55/,/2022-01-14 15:15:55/p" test.log
+wc -l 行数  -w 单词数 -c char
+du -h 
+
+less 翻页 
+more
+
+查询子级目录的大小 du -h --max-depth=1 /
+查询磁盘情况 df -h /
+find -d 文件夹 -f 文件
+
+### 日期
+date
+date "+%F"
+date "+%F %T"
+timedatectl
+ntpdate
+
+### 管道
+
+管道一般用于过滤， A|b 命令A的正确输出作为命令B的操作对象
+grep 取出含有搜寻内容的行 -v 反选
+
+### 其他
+
+killall
+ifconfig
+netstat -tnlp  net状态
+
+### linux 运行级别
+systemctl poweroff 关机
+systemctl rescue 单用户模式
+systemctl isolate multi-user.target 命令模式
+systemctl get-default
+
+### 计划任务
+
+- at 一次性计划任务
+
+systemctl status atd
+at now +1minutes
+
+cron 周期性计划任务
+crond   
+crontable
+
+使用crontable 创建任务后任务会记录到/var/sponl/cron里面去
+执行日志保存到/var/log/cron中
+
+ 0 8 * * * find /home/s/coredump -user search -type f -mtime +7 -delete
+
+这里，我们在每天早上 8 点整执行 find 命令；该命令会在 /home/s/coredump 目录下寻找 search 用户创建的普通 7 天前的文件，然后
+
+### ssh
+ssh -p 29565 root@182.168.1.58
+
+秘钥登录：
+https://www.cnblogs.com/yzgblogs/p/15191338.html
+
+### 文件传输
+
+scp [-P22 端口号] local_file remote_username@remote_ip:remote_file 
+
+### 日志
+rsyslog -linux 日志系统
+/etc/rsyslog.conf
 
 
+### 网络设定
+
+nmcli
+
+网络配置文件
+/etc/sysconfig/network-scripts/
+
+nmcli device status  查看网络连接
+nmcli device show 查看网络设备
+
+日志切割 cronolog 
+
+### shell

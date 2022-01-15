@@ -2,6 +2,8 @@
 settings-> system settings 
 reopen project... 不勾选
 
+s搜索 match case 选 all letter
+
 setting->editor tabs 
 tab limit 20
 show tabs in: 去掉 hide 选项
@@ -59,5 +61,6 @@ plugins
  websocket
  flowable
  .ignore
+
 
  
