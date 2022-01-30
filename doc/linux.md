@@ -214,6 +214,9 @@ killall
 ifconfig
 netstat -tnlp  net状态
 
+>/dev/null 2>&1	丢弃	丢弃
+2>&1 >/dev/null
+
 ### linux 运行级别
 systemctl poweroff 关机
 systemctl rescue 单用户模式
@@ -266,3 +269,14 @@ nmcli device show 查看网络设备
 日志切割 cronolog 
 
 ### shell
+
+
+### firewalld
+
+firewall-cmd --permanent --add-port=80/tcp
+
+
+listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+listeners=INTERNAL://127.0.0.1:9092,EXTERNAL://10.184.24.49:9093
+advertised.listeners=INTERNAL://127.0.0.1:9092,EXTERNAL://10.184.24.49:9093
+inter.broker.listener.name=INTERNAL
