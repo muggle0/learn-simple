@@ -280,3 +280,6 @@ listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
 listeners=INTERNAL://127.0.0.1:9092,EXTERNAL://10.184.24.49:9093
 advertised.listeners=INTERNAL://127.0.0.1:9092,EXTERNAL://10.184.24.49:9093
 inter.broker.listener.name=INTERNAL
+
+
+ grep 'TIFAuthenticationFilter URI: /uum/ebus/v4/personInfo/getUserInfoByUserId' uum-ebus.2022-03-22.log |wc -l
