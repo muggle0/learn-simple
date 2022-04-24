@@ -28,8 +28,14 @@ git push -u origin master
 ### 查看分支
 git checkout master
 
-###
+### 查看commit
 git checkout commitid
+
+### 切换远程分支
+git checkout -b dev origin/dev   
+
+### 查看本地分支关联的远程分支
+git branch -vv 
 
 ```
 
@@ -44,6 +50,55 @@ git push 远程仓库名 本地分支:远程仓库名 --force
 
 git reset --hard HEAD^
 
+### 强制push ,会覆盖其他提交记录 慎用
+git push -f 
+
+### 强制pull
+
+git pull origin master --allow-unrelated-histories 
+
 ```
 
-HEAD的含义：代表当前仓库最新版本。`HEAD^` 和`HEAD~`的意义和区别HEAD^+数字表示当前提交的父提交。具体是第几个父提交共同过^+数字指定，EAD^1第一个父提交，该语法只能用于合并(merge)的提交记录，因为一个通过合并产生的commit对象才有多个父提交。`HEAD~`(等同于HEAD^,注意没有加数字)表当前提交的上一个提交。<br>如果想获取一个提交的第几个父提交使用HEAD^+数字,想获取一个提交的上几个提交使用HEAD~。HEAD^和HEAD~或HEAD^^和HEAD~~并没有区别，只有HEAD^+数字才和HEAD~有区别。 git reset 撤销方式git reset --soft 版本号只撤销本地仓库数据到版本号git reset --mixed 版本号该方式为默认方式（即git reset 版本号）撤销本地和暂存区仓库到版本号git reset --hard 版本号撤销 工作区 暂存区 本地仓库到版本号git reset --hard origin/master远程仓库代码覆盖工作区 暂存区 本地仓库以上指令都不会对未归入git控制的文件进行管理也就是从未add过的文件git是不会去删除撤销它的撤销单个文件的修改git reset HEAD xxx.txt本地覆盖暂存区的代码git checkout xxx.txtgit checkout .将暂存区的代码覆盖工作区 “.”是通配所有文件
+### 其他
+
+```
+### 多仓库远程推送
+git push origin local:remote
+
+### 对于提交错误但未push的commit 可以使用idea 的undo commit 进行回滚
+
+### 合并
+git merge dev 
+
+### 删除本地的远程仓库地址
+git remote rm origin 
+
+### 删除远程分支
+git push origin --delete dev 
+
+### 选择合并（摘樱桃）
+git cherry-pick <commit_id>
+```
+
+### git subtree
+
+git subtree 是在当前仓库下创建子目录，适用于多仓库间公共代码的维护
+
+```
+### 添加子仓库
+git subtree add --prefix LibraryC libraryc master 
+
+### 拉取子仓库代码
+
+git subtree pull --prefix LibraryC libraryc master
+
+### 提交子仓库代码
+git subtree push --prefix LibraryC libraryc master 
+```
+
+HEAD^ 和HEAD~的意义和区别：
+- `HEAD^`+数字表示当前提交的父提交。具体是第几个父提交通过^+数字指定，`HEAD^1`第一个父提交，该语法只能用于合并(merge)的提交记录，因为一个通过合并产生的commit对象才有多个父提交。
+
+- `HEAD~`(等同于`HEAD^`,注意没有加数字)表当前提交的上一个提交。 如果想获取一个提交的第几个父提交使用`HEAD^`+数字,想获取一个提交的上几个提交使用`HEAD~``。
+
+- `HEAD^`和`HEAD~`或`HEAD^^`和`HEAD~~`并没有区别，只有`HEAD^`+数字才和`HEAD~`有区别。
