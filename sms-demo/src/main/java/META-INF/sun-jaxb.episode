@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bindings version="2.1" xmlns="http://java.sun.com/xml/ns/jaxb">
+  <!--
+
+此文件是由 JavaTM Architecture for XML Binding (JAXB) 引用实现 v2.2.11 生成的
+请访问 <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
+在重新编译源模式时, 对此文件的所有修改都将丢失。
+生成时间: 2021.12.23 时间 06:26:36 PM CST 
+
+  -->
+  <bindings scd="x-schema::tns" xmlns:tns="http://server.webservice.Bag.admin.com">
+    <schemaBindings map="false">
+      <package name="com.dexcoder.ws"/>
+    </schemaBindings>
+    <bindings scd="~tns:getFlag">
+      <class ref="com.dexcoder.ws.GetFlag"/>
+    </bindings>
+    <bindings scd="~tns:getFlagResponse">
+      <class ref="com.dexcoder.ws.GetFlagResponse"/>
+    </bindings>
+    <bindings scd="~tns:sendMessage">
+      <class ref="com.dexcoder.ws.SendMessage"/>
+    </bindings>
+    <bindings scd="~tns:sendMessageResponse">
+      <class ref="com.dexcoder.ws.SendMessageResponse"/>
+    </bindings>
+  </bindings>
+</bindings>
+
