@@ -1,6 +1,9 @@
 package com.muggle.webfluxtest;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.web.reactive.context.ReactiveWebServerApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,5 +32,6 @@ public class TestController {
     public Flux<String> longSocket(){
         return Flux.interval(Duration.ofSeconds(1))
                 .map(result -> ">>>");
+        BeanDefinitionRegistry
     }
 }

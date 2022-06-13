@@ -8,6 +8,9 @@ import io.netty.handler.codec.http.HttpRequestEncoder;
 import io.netty.handler.codec.http.HttpResponseDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicStampedReference;
+import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.logging.Logger;
 
 public class ClientInitializer extends ChannelInitializer<SocketChannel> {
@@ -20,5 +23,6 @@ public class ClientInitializer extends ChannelInitializer<SocketChannel> {
                 .addLast(new HttpObjectAggregator(65536))
                 .addLast("http-encoder",new HttpRequestEncoder())
                 .addLast("myHandler",new HttpClientHandler());
+
     }
 }
