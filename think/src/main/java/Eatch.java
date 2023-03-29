@@ -178,7 +178,8 @@ public class Eatch {
 
     /*
     * 将待排序数组按照步长gap进行分组，然后将每组的元素利用直接插入排序的方法进行排序；
-    * 每次再将gap折半减小，循环上述操作；当gap=1时，利用直接插入，完成排序。*/
+    * 每次再将gap折半减小，循环上述操作；当gap=1时，利用直接插入，完成排序。
+    * */
     public static void sort3(int[] a) {
         int length = a.length;
         int h = 1;
