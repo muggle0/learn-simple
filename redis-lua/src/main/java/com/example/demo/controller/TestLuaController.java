@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -30,6 +32,7 @@ public class TestLuaController {
     public String unlock()  {
         final AutoCloseRedisLocker test = new AutoCloseRedisLocker("test:testLock",
             "test", 200000L, redisTemplate);
+
         try {
             test.close();
             return "true";
