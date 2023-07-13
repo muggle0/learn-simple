@@ -16,7 +16,7 @@
 ```
 private void lock(long leaseTime, TimeUnit unit, boolean interruptibly) throws InterruptedException {
         long threadId = Thread.currentThread().getId();
-        Long ttl = tryAcquire(leaseTime, unit, threadId);
+        Long ttl = tryAcquire(leaseTime, unit, threadId);   
         // lock acquired
         if (ttl == null) {
             return;
