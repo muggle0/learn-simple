@@ -251,6 +251,7 @@ https://www.cnblogs.com/yzgblogs/p/15191338.html
 
 scp [-P22 端口号] local_file remote_username@remote_ip:remote_file 
 
+rz 上传/sz -b 二进制下载
 ### 日志
 rsyslog -linux 日志系统
 /etc/rsyslog.conf
