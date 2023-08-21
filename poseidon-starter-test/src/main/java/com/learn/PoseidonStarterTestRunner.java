@@ -9,10 +9,17 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * Created by muggle
  */
 
+
 @SpringBootApplication
 public class PoseidonStarterTestRunner {
     public static void main(String[] args) {
         SpringApplication.run(PoseidonStarterTestRunner.class, args);
     }
 
+    public static void test(){
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>");
+    }
+
 }
+
+

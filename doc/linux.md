@@ -251,6 +251,7 @@ https://www.cnblogs.com/yzgblogs/p/15191338.html
 
 scp [-P22 端口号] local_file remote_username@remote_ip:remote_file 
 
+rz 上传/sz -b 二进制下载
 ### 日志
 rsyslog -linux 日志系统
 /etc/rsyslog.conf
@@ -275,11 +276,11 @@ nmcli device show 查看网络设备
 
 firewall-cmd --permanent --add-port=80/tcp
 
-
-listener.security.protocol.map=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-listeners=INTERNAL://127.0.0.1:9092,EXTERNAL://10.184.24.49:9093
-advertised.listeners=INTERNAL://127.0.0.1:9092,EXTERNAL://10.184.24.49:9093
-inter.broker.listener.name=INTERNAL
-
-
  grep 'TIFAuthenticationFilter URI: /uum/ebus/v4/personInfo/getUserInfoByUserId' uum-ebus.2022-03-22.log |wc -l
+
+### redis
+
+--bigkeys 是 redis 自带的命令，对整个 Key 进行扫描，统计 string，list，set，zset，hash 这几个常见数据类型中每种类型里的最大的 key。
+
+
+--MEMORY USAGE keyname1 查看key 占用内存
