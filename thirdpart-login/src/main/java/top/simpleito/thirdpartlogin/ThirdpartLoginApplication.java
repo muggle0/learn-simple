@@ -10,4 +10,5 @@ public class ThirdpartLoginApplication {
         SpringApplication.run(ThirdpartLoginApplication.class, args);
     }
 
+
 }

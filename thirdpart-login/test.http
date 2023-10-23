@@ -1,0 +1,8 @@
+# @no-redirect
+GET http://localhost:8080/login/oauth2/code/gitee?code=83c795b5ec0ce16b4304ffae6c68c39eaa79e292deae8d05589372b81de766ba&state=w4TF5iFHvNUFPIdKs65jbLp4KUzakRlM-1F1kKp8moI%3D
+
+
+###
+GET https://gitee.com/oauth/authorize?response_type=code&client_id=1d8fd19d4c177fcc59d532d914566a008e72a647711a32481bb2c2c005a97872&scope=user_info&state=6etxg-rf9_29MB5qKpTRGYFGQYlOd07zghiXc5ROTyQ%3D&redirect_uri=http://127.0.0.1:8080/login/oauth2/code/gitee
+
+

@@ -16,21 +16,26 @@
     </parent>
     <dependencies>
         <dependency>
-            <groupId></groupId>
-            <artifactId></artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
 
     <profiles>
         <profile>
             <id>local</id>
-            <dependencies>
+            <!--<dependencies>
                 <dependency>
                     <groupId>com.muggle</groupId>
                     <artifactId>poseidon-generator</artifactId>
                     <version>1.0.4-release</version>
                 </dependency>
-            </dependencies>
+            </dependencies>-->
         </profile>
         <profile>
             <id>normal</id>
