@@ -26,11 +26,7 @@ user.names:{ first: "Alice" and last: "White" }
 ```
 POST /_query?format=txt
 {
- "query" : """
-  FROM employees
-| STATS c = COUNT(emp_no) BY languages
-| STATS most_speakers_of_a_lang = MAX(c)
- """
+ "query" : "FROM test | limit 1"
 }
 
   FROM employees
@@ -123,6 +119,7 @@ POST /products/_doc/1
   "description": "苹果真好吃，真好吃"
 }
 ```
+
 ```shell
 # 添加文档
 POST /products/_doc
@@ -413,3 +410,4 @@ GET /products/_search
   }
 }
 ```
+
