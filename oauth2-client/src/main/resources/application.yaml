@@ -3,7 +3,7 @@ spring:
     oauth2:
       client:
         registration:
-          okta:
-            client-id: okta-client-id
-            client-authentication-method: private_key_jwt
-            authorization-grant-type: authorization_code
+          github:
+            clientId: github-client-id
+            clientSecret: github-client-secret
+# ...
