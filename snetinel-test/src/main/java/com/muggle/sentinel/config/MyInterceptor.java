@@ -10,6 +10,7 @@ public class MyInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         ContextUtil.enter("test.hello",  request.getHeader("x-forwarded-for"));
+        ContextUtil.exit();
         return true;
     }
 }
