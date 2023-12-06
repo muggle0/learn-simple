@@ -30,9 +30,35 @@ go env -w GOPROXY=https://goproxy.cn,direct
 ![](2023-01-28-21-40-46.png)
 ![](2023-01-28-21-41-12.png)
 
-- go get
+- go build: 用于编译我们指定的源码文件或代码包以及它们的依赖包
+- go clean: 命令会删除掉执行其它命令时产生的一些文件和目录
+- go get: 用于下载或更新指定的代码包及其依赖包，并对它们进行编译和安装
+- go install： 用于编译并安装指定的代码包及它们的依赖包
+- go list： 列出指定的代码包的信息
+- go mod： 操作 go module 的指令
 
 ## go module
 
+Go modules 是 Go 语言的依赖解决方案，相当于java 中的maven，使用 go module 管理依赖后会在项目根目录下生成两个文件 go.mod 和 go.sum。
+go.mod 中会记录当前项目的所依赖的包的信息，文件格式如下所示：
+```xml
+module muggle.com
 
+go 1.18
 
+require (
+    github.com/alibaba/sentinel-golang v1.0.4
+)
+```
+
+go.sum记录每个依赖库的版本和哈希值，用来校验本地包的真实性。
+
+go module 的操作指令
+
+- go mod init： 生成 go.mod 文件，此命令会在当前目录中初始化并创建一个新的go.mod文件
+- go mod tidy： 整理现有的依赖，使用此命令来下载指定的模块，并删除已经不用的模块
+- go mod graph： 查看现有的依赖结构，生成项目所有依赖的报告；
+- go mod edit： 编辑 go.mod 文件，之后通过 download进行下载
+- go mod vendor： vendor 是早期的依赖管理工具，该指令是导出项目所有的依赖到vendor目录。
+
+掌握这些基本的go 开发知识后我们直接开始写go web 项目，语法相关的知识在后续的开发中在做介绍。
