@@ -116,3 +116,18 @@ https://blog.csdn.net/weixin_43004044/article/details/120622127
 
 
 https://docs.spring.io/spring-security/reference/servlet/getting-started.html
+
+
+认证方式
+client_secret_basic：最常用，客户端的 client_id 和 client_secret，传递给授权服务器
+
+client_secret_post：常用，客户端的 client_id 和 client_secret，传递给授权服务器，参数传递方式不同
+
+client_secret_jwt：利用 JWT 进行认证
+
+private_key_jwt：方式就是利用 JWT 进行认证。请求方拥有自己的公私钥（密钥对）
+
+none
+————————————————
+版权声明：本文为CSDN博主「ricardo.M.Yu」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+原文链接：https://blog.csdn.net/yu619251940/article/details/131108235
