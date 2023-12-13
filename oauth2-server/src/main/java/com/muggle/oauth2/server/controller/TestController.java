@@ -28,6 +28,7 @@ public class TestController {
     public String getTest(){
         RegisteredClient loginClient = RegisteredClient.withId("login-client")
                 .clientId("login-client")
+                // noop 表示security 不加密，明文存数据库
                 .clientSecret("{noop}openid-connect")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
