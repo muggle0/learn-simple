@@ -1,8 +1,10 @@
 spring:
   security:
     oauth2:
-      client:
-        registration:
-          google:
-            client-id: google-client-id
-            client-secret: google-client-secret
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+        opaquetoken:
+          introspection-uri: https://my-auth-server.com/oauth2/introspect
+          client-id: my-client-id
+          client-secret: my-client-secret
