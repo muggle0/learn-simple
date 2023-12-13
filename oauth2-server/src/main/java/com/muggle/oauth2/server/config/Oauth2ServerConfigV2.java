@@ -115,7 +115,7 @@ public class Oauth2ServerConfigV2 {
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
         JdbcRegisteredClientRepository repository = new JdbcRegisteredClientRepository(jdbcTemplate);
-        repository.save(loginClient);
+//        repository.save(loginClient);
         return repository;
     }
 
