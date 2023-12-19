@@ -1,9 +1,10 @@
-package com.muggle.oauth.auth;
+package com.muggle.oauth2.resource.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -18,6 +19,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
  * Created by muggle
  */
 @Component
+@EnableWebSecurity
 public class OAuth2ResourceServerSecurityConfiguration {
 
 /*    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
