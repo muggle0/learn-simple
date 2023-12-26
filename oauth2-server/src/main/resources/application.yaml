@@ -10,4 +10,4 @@ spring:
     password: root
 logging:
   level:
-    root: debug
+    root: info
