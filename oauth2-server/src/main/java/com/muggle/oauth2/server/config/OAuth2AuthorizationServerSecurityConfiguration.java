@@ -64,7 +64,7 @@ import static org.springframework.security.oauth2.server.authorization.config.an
  * @author Steve Riesenberg
  */
 //@Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 public class OAuth2AuthorizationServerSecurityConfiguration {
 
 	@Bean

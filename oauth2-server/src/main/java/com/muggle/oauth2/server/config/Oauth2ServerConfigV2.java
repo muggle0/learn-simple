@@ -47,8 +47,8 @@ import static org.springframework.security.oauth2.server.authorization.config.an
  * Created by muggle
  */
 
-@Configuration
-@EnableWebSecurity
+//@Configuration
+//@EnableWebSecurity
 public class Oauth2ServerConfigV2 {
 
     @Bean
@@ -121,6 +121,7 @@ public class Oauth2ServerConfigV2 {
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
+        // fixme
         KeyPair keyPair = generateRsaKey();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();

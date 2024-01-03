@@ -21,12 +21,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/test")
 public class TestController {
-    @Autowired
-    private RegisteredClientRepository repository;
+   /* @Autowired
+    private RegisteredClientRepository repository;*/
 
     @GetMapping("/")
     public String getTest(){
-        RegisteredClient loginClient = RegisteredClient.withId("login-client")
+       /* RegisteredClient loginClient = RegisteredClient.withId("login-client")
                 .clientId("login-client")
                 // noop 表示security 不加密，明文存数据库
                 .clientSecret("{noop}openid-connect")
@@ -39,7 +39,7 @@ public class TestController {
                 .scope(OidcScopes.PROFILE)
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
-        repository.save(loginClient);
+        repository.save(loginClient);*/
         return ">";
     }
 

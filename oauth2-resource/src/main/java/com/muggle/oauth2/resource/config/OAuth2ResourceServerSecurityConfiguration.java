@@ -1,3 +1,4 @@
+/*
 package com.muggle.oauth2.resource.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,11 +14,13 @@ import org.springframework.stereotype.Component;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+*/
 /**
  * Description
  * Date 2023/12/13
  * Created by muggle
- */
+ *//*
+
 @Component
 @EnableWebSecurity
 public class OAuth2ResourceServerSecurityConfiguration {
@@ -29,10 +32,7 @@ public class OAuth2ResourceServerSecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(HttpMethod.GET, "/a/**").hasAuthority("SCOPE_message:read")
-                        .requestMatchers(HttpMethod.POST, "/a/**").hasAuthority("SCOPE_message:write")
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(withDefaults()));
         // @formatter:on
@@ -44,3 +44,4 @@ public class OAuth2ResourceServerSecurityConfiguration {
         return NimbusJwtDecoder.withJwkSetUri(this.jwkSetUri).build();
     }
 }
+*/
