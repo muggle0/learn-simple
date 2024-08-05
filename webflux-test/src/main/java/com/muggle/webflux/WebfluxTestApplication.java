@@ -1,4 +1,4 @@
-package com.muggle.webfluxtest;
+package com.muggle.webflux;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.muggle.webfluxtest;
+package com.muggle.webflux.test;
 
 /**
  * Description

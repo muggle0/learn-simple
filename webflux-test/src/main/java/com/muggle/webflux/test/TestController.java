@@ -1,4 +1,4 @@
-package com.muggle.webfluxtest;
+package com.muggle.webflux.test;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,5 @@ public class TestController {
     public Flux<String> longSocket(){
         return Flux.interval(Duration.ofSeconds(1))
                 .map(result -> ">>>");
-        BeanDefinitionRegistry
     }
 }
