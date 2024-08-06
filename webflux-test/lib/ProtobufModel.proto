@@ -1,0 +1,8 @@
+syntax="proto3";
+package com.muggle.webflux.test;
+option java_package = "com.muggle.webflux.test";
+option java_outer_classname = "ProtobufModel$$ByJProtobuf";
+//
+message ProtobufModel {  
+ string name=1;
+}
