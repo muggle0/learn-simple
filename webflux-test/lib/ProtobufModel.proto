@@ -6,3 +6,9 @@ option java_outer_classname = "ProtobufModel$$ByJProtobuf";
 message ProtobufModel {  
  string name=1;
 }
+
+
+service Chord {
+ rpc FindSuccessor (ProtobufModel) returns (ProtobufModel) {
+ }
+}
