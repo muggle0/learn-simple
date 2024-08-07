@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>com.baidu</groupId>
-            <artifactId>jprotobuf-rpc-spring-starter</artifactId>
+            <artifactId>jprotobuf-rpc-core-spring</artifactId>
             <version>4.2.1</version>
         </dependency>
 
