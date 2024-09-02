@@ -282,3 +282,7 @@ sudo vi /etc/docker/daemon.json
  "registry-mirrors": ["https://b9pmyelo.mirror.aliyuncs.com"]
 
 ```
+
+https://blog.csdn.net/lovoo/article/details/119175523?ops_request_misc=%257B%2522request%255Fid%2522%253A%252218CB3CEA-B719-4292-A6BA-8A71F6DF649E%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&request_id=18CB3CEA-B719-4292-A6BA-8A71F6DF649E&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-3-119175523-null-null.nonecase&utm_term=%E4%BD%BF%E7%94%A8vagrant%E6%90%AD%E5%BB%BAk8s&spm=1018.2226.3001.4450
+
+https://blog.csdn.net/lovoo/article/details/119180165?ops_request_misc=%257B%2522request%255Fid%2522%253A%252218CB3CEA-B719-4292-A6BA-8A71F6DF649E%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&request_id=18CB3CEA-B719-4292-A6BA-8A71F6DF649E&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-5-119180165-null-null.nonecase&utm_term=%E4%BD%BF%E7%94%A8vagrant%E6%90%AD%E5%BB%BAk8s&spm=1018.2226.3001.4450
