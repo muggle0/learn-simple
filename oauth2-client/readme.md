@@ -11,3 +11,4 @@ client  作用是获取token 存起来
 resource 作用是 验证token
 server 的作用是 提供验证地址
 
+## 当client 有请求进入, 检查存储
