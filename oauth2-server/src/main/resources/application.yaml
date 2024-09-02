@@ -11,24 +11,27 @@ spring:
   security:
     user:
       name: user
-      password: password
+      password: user
     oauth2:
       authorizationserver:
         client:
-          oidc-client:
+          login-client:
             registration:
-              client-id: "oidc-client"
-              client-secret: "{noop}secret"
+              client-id: "login-client"
+              client-secret: "openid-connect"
               client-authentication-methods:
                 - "client_secret_basic"
               authorization-grant-types:
                 - "authorization_code"
                 - "refresh_token"
               redirect-uris:
-                - "http://127.0.0.1:8080/login/oauth2/code/oidc-client"
+                - "http://127.0.0.1:8081/login/oauth2/code/login-client"
               post-logout-redirect-uris:
-                - "http://127.0.0.1:8080/"
+                - "http://127.0.0.1:8081/"
               scopes:
                 - "openid"
                 - "profile"
             require-authorization-consent: true
+logging:
+  level:
+    org.springframework.security: debug
