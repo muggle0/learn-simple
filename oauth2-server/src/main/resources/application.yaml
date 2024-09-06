@@ -1,37 +1,37 @@
-server:
-  port: 8081
-
-
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/oauth_test?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai&useSSL=false
-    username: root
-    password: root
-  security:
-    user:
-      name: user
-      password: user
-    oauth2:
-      authorizationserver:
-        client:
-          login-client:
-            registration:
-              client-id: "login-client"
-              client-secret: "openid-connect"
-              client-authentication-methods:
-                - "client_secret_basic"
-              authorization-grant-types:
-                - "authorization_code"
-                - "refresh_token"
-              redirect-uris:
-                - "http://127.0.0.1:8081/login/oauth2/code/login-client"
-              post-logout-redirect-uris:
-                - "http://127.0.0.1:8081/"
-              scopes:
-                - "openid"
-                - "profile"
-            require-authorization-consent: true
-logging:
-  level:
-    org.springframework.security: debug
+#server:
+#  port: 8081
+#
+#
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/oauth_test?useUnicode=true&characterEncoding=UTF-8&useSSL=true&serverTimezone=Asia/Shanghai&useSSL=false
+#    username: root
+#    password: root
+#  security:
+#    user:
+#      name: user
+#      password: user
+#    oauth2:
+#      authorizationserver:
+#        client:
+#          login-client:
+#            registration:
+#              client-id: "login-client"
+#              client-secret: openid-connect
+#              client-authentication-methods:
+#                - "client_secret_basic"
+#              authorization-grant-types:
+#                - "authorization_code"
+#                - "refresh_token"
+#              redirect-uris:
+#                - "http://localhost:8082/login/oauth2/code/login-client"
+#              post-logout-redirect-uris:
+#                - "http://localhost:8082/"
+#              scopes:
+#                - "openid"
+#                - "profile"
+#            require-authorization-consent: true
+#logging:
+#  level:
+#    org.springframework.security: debug

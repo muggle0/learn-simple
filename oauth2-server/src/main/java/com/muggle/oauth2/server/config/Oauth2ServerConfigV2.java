@@ -9,19 +9,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
@@ -39,23 +39,20 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
-import static org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration.*;
-
 /**
  * Description
  * Date 2023/10/30
  * Created by muggle
  */
 
-//@Configuration
-//@EnableWebSecurity
+@Configuration
+@EnableWebSecurity
 public class Oauth2ServerConfigV2 {
-
     @Bean
     @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
             throws Exception {
-        applyDefaultSecurity(http);
+        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 .oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
         http
@@ -80,6 +77,7 @@ public class Oauth2ServerConfigV2 {
             throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/oauth2/authorize").permitAll()
                         .anyRequest().authenticated()
                 )
                 // Form login handles the redirect to the login page from the
@@ -90,10 +88,10 @@ public class Oauth2ServerConfigV2 {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails userDetails = User.withDefaultPasswordEncoder()
+    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+        UserDetails userDetails = User.builder()
                 .username("user")
-                .password("password")
+                .password(passwordEncoder.encode("user"))
                 .roles("USER")
                 .build();
 
@@ -101,27 +99,30 @@ public class Oauth2ServerConfigV2 {
     }
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
-        RegisteredClient loginClient = RegisteredClient.withId(UUID.randomUUID().toString())
+    public PasswordEncoder passwordEncode() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public RegisteredClientRepository registeredClientRepository() {
+        RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("login-client")
-                .clientSecret("{noop}openid-connect")
+                .clientSecret("openid-connect")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:8082/login/oauth2/code/login-client")
-                .redirectUri("http://127.0.0.1:8082/authorized")
+                .redirectUri("http://localhost:8082/login/oauth2/code/login-client")
+                .postLogoutRedirectUri("http://127.0.0.1:8082/")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
-        JdbcRegisteredClientRepository repository = new JdbcRegisteredClientRepository(jdbcTemplate);
-//        repository.save(loginClient);
-        return repository;
+
+        return new InMemoryRegisteredClientRepository(oidcClient);
     }
 
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
-        // fixme
         KeyPair keyPair = generateRsaKey();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();

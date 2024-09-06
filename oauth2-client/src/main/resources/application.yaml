@@ -31,9 +31,9 @@ spring:
             client-name: gitee
         provider:
           spring:
-            authorizationUri: http://account.vcpinner.cn:8081/oauth2/authorize
-            token-uri: http://account.vcpinner.cn:8081/oauth2/token
-            jwk-set-uri: http://account.vcpinner.cn:8081/oauth2/jwks
+            authorizationUri: http://test.v1.cn:8081/oauth2/authorize
+            token-uri: http://test.v1.cn:8081/oauth2/token
+            jwk-set-uri: http://test.v1.cn:8081/oauth2/jwks
           gitee:
             authorization-uri: https://gitee.com/oauth/authorize
             token-uri: https://gitee.com/oauth/token
