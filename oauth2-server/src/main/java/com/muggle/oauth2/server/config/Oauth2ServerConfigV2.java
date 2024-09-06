@@ -104,15 +104,15 @@ public class Oauth2ServerConfigV2 {
     }
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository() {
+    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
         RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("login-client")
-                .clientSecret("openid-connect")
+                .clientSecret(passwordEncoder.encode("openid-connect"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("http://localhost:8082/login/oauth2/code/login-client")
-                .postLogoutRedirectUri("http://127.0.0.1:8082/")
+                .postLogoutRedirectUri("http://localhost:8082/")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
