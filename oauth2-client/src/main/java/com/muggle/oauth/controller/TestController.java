@@ -22,9 +22,4 @@ public class TestController {
         return ">>";
     }
 
-    @GetMapping("/test0")
-    public String test(){
-        String forObject = restTemplate.getForObject("http://localhost:8083/a/test", String.class);
-        return forObject;
-    }
 }
