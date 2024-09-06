@@ -17,7 +17,7 @@ spring:
             client-secret: openid-connect
             client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
-            redirect-uri: http://127.0.0.1:8081/login/oauth2/code/login-client
+            redirect-uri: http://127.0.0.1:8082/login/oauth2/code/login-client
             scope: openid,profile
             client-name: Spring
 
