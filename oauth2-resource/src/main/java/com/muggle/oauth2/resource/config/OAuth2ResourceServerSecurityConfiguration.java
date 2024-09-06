@@ -1,4 +1,3 @@
-/*
 package com.muggle.oauth2.resource.config;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -14,12 +13,13 @@ import org.springframework.stereotype.Component;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-*/
-/**
+/*
+*
  * Description
  * Date 2023/12/13
  * Created by muggle
- *//*
+
+*/
 
 @Component
 @EnableWebSecurity
@@ -44,4 +44,3 @@ public class OAuth2ResourceServerSecurityConfiguration {
         return NimbusJwtDecoder.withJwkSetUri(this.jwkSetUri).build();
     }
 }
-*/
