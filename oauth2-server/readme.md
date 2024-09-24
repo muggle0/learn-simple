@@ -84,3 +84,4 @@ spring boot oauth2 实战
 ## spring-boot-starter-oauth2-client 
 
 该组件作用是
+https://flyeric.top/archives/microservice-authorization-with-springboot3-oauth2
