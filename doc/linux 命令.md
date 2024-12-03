@@ -35,7 +35,7 @@ ps -aux|grep java
 
 netstat -nltp | grep 端口号
 
-ree -m和free -g命令查看，分别表示MB和GB  cat /proc/meminfo
+free -m和free -g命令查看，分别表示MB和GB  cat /proc/meminfo
 nohup java -jar babyshark-0.0.1-SNAPSHOT.jar  > log.file  2>&1 &
 
 ## 配置
