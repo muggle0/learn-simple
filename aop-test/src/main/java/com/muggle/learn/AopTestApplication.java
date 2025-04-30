@@ -9,8 +9,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 @SpringBootApplication
 @EnableScheduling
 public class AopTestApplication {
-
-
     public static void main(String[] args) {
         SpringApplication.run(AopTestApplication.class, args);
     }

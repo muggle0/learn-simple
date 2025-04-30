@@ -17,15 +17,30 @@ spring:
             client-secret: openid-connect
             client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
-            redirect-uri: http://127.0.0.1:8082/login/oauth2/code/login-client
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
             scope: openid,profile
             client-name: Spring
-
+          gitee-client:
+            provider: gitee
+            client-id: 1d8fd19d4c177fcc59d532d914566a008e72a647711a32481bb2c2c005a97872
+            client-secret: 1c4b2c99bffbbfffb9e15efe9a50d0f64b309922150bd48fc63b546abcdcc97e
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope: hook
+            client-name: gitee
         provider:
           spring:
-            authorizationUri: http://localhost:8081/oauth2/authorize
-            token-uri: http://localhost:8081/oauth2/token
-            jwk-set-uri: http://localhost:8081/oauth2/jwks
+            authorizationUri: http://test.v1.cn:8081/oauth2/authorize
+            token-uri: http://test.v1.cn:8081/oauth2/token
+            jwk-set-uri: http://test.v1.cn:8081/oauth2/jwks
+          gitee:
+            authorization-uri: https://gitee.com/oauth/authorize
+            token-uri: https://gitee.com/oauth/token
+            user-name-attribute: id
+            user-info-uri: https://gitee.com/api/v5/user
+
+
 ---
 logging:
   level:

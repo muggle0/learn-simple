@@ -1,0 +1,1 @@
+java -jar jprotobuf-2.4.20-jar-with-dependencies.jar --java_out=. ProtobufModel.proto

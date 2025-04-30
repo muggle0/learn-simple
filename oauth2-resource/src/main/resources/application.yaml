@@ -1,0 +1,17 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+#          指向是授权服务器的地址
+          issuer-uri: http://test.v1.cn:8081
+          # 资源服务器必须能够独立于授权服务器启动
+          jwk-set-uri: http://test.v1.cn:8081/oauth2/jwks
+#        opaquetoken:
+#          introspection-uri: https://my-auth-server.com/oauth2/introspect
+#          client-id: my-client-id
+#          client-secret: my-client-secret
+
+
+server:
+  port: 8083
