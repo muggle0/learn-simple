@@ -147,6 +147,17 @@ finally:
     # 清理代码
 ```
 
+raise
+
+```python
+raise [exceptionName [(reason)]]
+
+raise ValueError("a 必须是数字")
+
+raise ## 默认引发的是 RuntimeError 异常 
+```
+通过 raise from 语句，能够更好地追踪错误的根源。即使异常被转换，原始异常的信息也不会丢失。
+
 ### Python特有特性
 
 ```python 
