@@ -16,11 +16,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <dependencies>
-         <dependency>
-             <groupId>com.muggle</groupId>
-             <artifactId>poseidon-boot-starter</artifactId>
-             <version>1.1.0-SNAPSHOT</version>
-         </dependency>
+<!--         <dependency>-->
+<!--             <groupId>com.muggle</groupId>-->
+<!--             <artifactId>poseidon-boot-starter</artifactId>-->
+<!--             <version>1.1.0-SNAPSHOT</version>-->
+<!--         </dependency>-->
          <dependency>
              <groupId>org.aspectj</groupId>
              <artifactId>aspectjweaver</artifactId>
