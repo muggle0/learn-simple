@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.RedisCallback;
@@ -22,6 +23,8 @@ public class AutoCloseRedisLocker implements AutoCloseable {
     private long exrieTime;
 
     private StringRedisTemplate redisTemplate;
+
+    private Redisson redisson;
 
     public AutoCloseRedisLocker(String key, String value, long exrieTime, StringRedisTemplate redisTemplate) {
         this.key = key;

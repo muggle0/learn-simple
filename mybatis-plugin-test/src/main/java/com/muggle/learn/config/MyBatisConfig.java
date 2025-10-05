@@ -59,7 +59,7 @@ public class MyBatisConfig {
         //添加插件
 
         PagePlugin pagePlugin = new PagePlugin();
-        bean.setPlugins();
+//        bean.setPlugins();
 
         try {
 

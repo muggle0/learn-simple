@@ -34,6 +34,7 @@ public class TestLuaController {
     public String unlock()  {
         final AutoCloseRedisLocker test = new AutoCloseRedisLocker("test:testLock",
             "test", 200000L, redisTemplate);
+        Semaphore semaphore = new Semaphore(2);
 
         try {
             test.close();
@@ -41,7 +42,7 @@ public class TestLuaController {
         }catch (Exception e){
             return "false";
         }
-        final Semaphore semaphore = new Semaphore();
+
     }
 
     @GetMapping("/testTry")
